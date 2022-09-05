@@ -8,6 +8,9 @@ output:
   pdf_document: default
   html_notebook: default
   word_document: default
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include=FALSE}
@@ -44,107 +47,83 @@ library(factoextra)
 
 ## (a) Why should you not automatically scale the data prior to a PCA or FA? Restrict your answer to one or two concise sentences.
 
-## (b) The dataset ass2pop.csv is available in the LMS folder \'Data sets\'. For a description of the data see Assignment 1. Here we work with a part of the dataset only.
-Let Σ be the covariance matrix consisting of rows 1:11, and columns 3:13. Read the data into R. The value for Σ[1, 1] should be 0.8266. In your answer show the R commands you use to calculate the following and show the results stating
-clearly what each part is.
+## (b) The dataset ass2pop.csv is available in the LMS folder 'Data sets'. For a description of the data see Assignment 1. Here we work with a part of the dataset only.
+
+Let Σ be the covariance matrix consisting of rows 1:11, and columns
+3:13. Read the data into R. The value for Σ[1, 1] should be 0.8266. In
+your answer show the R commands you use to calculate the following and
+show the results stating clearly what each part is.
 
 ### i. the eigenvalues of Σ;
+
 ii. the matrix Σ^2/3^;
 iii. the matrix 2Σ^−1/4^ΣΣ^−1/4^ and its eigenvalues
 
 # Question 2
 
-## Consider the abalone data. We want to compare the performance of linear regression and PCR for the raw abalone data following the description given in Q3 of Lab 3. In the analysis we use the predictor variables Length, Height, Whole Weight, Shucked Weight, Viscera Weight and Dried-Shell Weight and we consider Rings as the response variable. Hint. Note the change of predictor variables used in Q2 compared to the
-variables in the Lab.
+## Consider the abalone data. We want to compare the performance of linear regression and PCR for the raw abalone data following the description given in Q3 of Lab 3. In the analysis we use the predictor variables Length, Height, Whole Weight, Shucked Weight, Viscera Weight and Dried-Shell Weight and we consider Rings as the response variable. Hint. Note the change of predictor variables used in Q2 compared to the variables in the Lab.
 
-## (a) For the regular linear regression use forward selection and state the order in which the variables are chosen. Calculate the residual standard deviation for each number of predictors. Hint. you may make use of the code in Lab 3.
+### (a) For the regular linear regression use forward selection and state the order in which the variables are chosen. Calculate the residual standard deviation for each number of predictors. Hint. you may make use of the code in Lab 3.
 
-## 
-(b) Carry out PCR on the raw data using the same variables and response as in part (a). For each additional principal component you add to the regression model as predictor, calculate the residual standard deviation and list which of the variables has the heighest absolute weight in the respective principal component.
+### (b) Carry out PCR on the raw data using the same variables and response as in part (a). For each additional principal component you add to the regression model as predictor, calculate the residual standard deviation and list which of the variables has the heighest absolute weight in the respective principal component.
 
-## 
-(c) In a single graph show plots of residual standard deviation resulting from your models on the y -axis against the number of variables/PC components on the x-axis.
+### (c) In a single graph show plots of residual standard deviation resulting from your models on the y -axis against the number of variables/PC components on the x-axis.
 
-## 
-(d) Explain why you do not require to a variable selection method when selecting the predictors in PCR.
+### (d) Explain why you do not require to a variable selection method when selecting the predictors in PCR.
 
-## 
-(e) Comment on your findings and in particular on what approaches work better for these data and why.
+### (e) Comment on your findings and in particular on what approaches work better for these data and why.
 
 # Question 3
 
 ## We consider the 13-dimensional wine recognition data of Example 4.6 and Lab 4. The data are available in the Data Sets folder. Here we want to compare a factor analysis of all observations with those obtained from cultivar 1 and cultivar 2. The cultivar membership of the observations is given in column 1 of the data set. For part of this analysis you may report the relevant results obtained in the lab. You may find it useful to create two data frames: one for the complete data and a separate one for the first two cultivars of the data. We refer to the latter as the *cultivar12* data. Hint. use the R command factanal from the stats library.
 
-## 
+## (a) Scale the data and work with the scaled data. How many
 
-(a) Scale the data and work with the scaled data. How many observations are in the
-cultivar12 data?
+observations are in the cultivar12 data?
 
-## 
-(b) Separately for the complete and for the cultivar12 data, carry out, display and report the results of the following:
+## (b) Separately for the complete and for the cultivar12 data, carry
 
-### 
-i. Calculate the sample covariance matrix of the scaled data and the eigenvalues of this matrix. What is the value of $\hat{σ}^2$ for k=2? How different are the values of $\hat{σ}^2$ for the complete and the two cultivar12 datasets?
-Hint. You may use the information Box 6.7 in your calculations.
+out, display and report the results of the following:
 
-### 
-ii. Calculate and list the factor loadings for the 2-factor principal axis factoring using the value of $\hat{σ}^2$ calculated in the previous part.
+### i. Calculate the sample covariance matrix of the scaled data and the eigenvalues of this matrix. What is the value of $\hat{σ}^2$ for k=2? How different are the values of $\hat{σ}^2$ for the complete and the two cultivar12 datasets? Hint. You may use the information Box 6.7 in your calculations.
 
-### 
-iii. Show biplots of the factor loadings.
-iv. Compare the results obtained from the complete data and the cultivar12 data and comment on the main differences, similarities etc.
+### ii. Calculate and list the factor loadings for the 2-factor principal axis factoring using the value of $\hat{σ}^2$ calculated in the previous part.
 
-## (c) We next turn to ML factor loadings and testing. In your calculations use the option \"none\" for rotation. If you use other commands, you may not achieve full marks for this question.
-Separately for the complete and for the cultivar12 data, carry out, display and report the results of the following:
+### iii. Show biplots of the factor loadings.
 
-### 
-i. Calculate the factor loadings for the 2-factor ML without rotation. List your factor loadings and show biplots of the factor loadings.
+### iv. Compare the results obtained from the complete data and the cultivar12 data and comment on the main differences, similarities etc.
 
-### 
-ii. Carry out a sequence of hypothesis tests starting with the one-factor model.
+## (c) We next turn to ML factor loadings and testing. In your calculations use the option "none" for rotation. If you use other commands, you may not achieve full marks for this question. Separately for the complete and for the cultivar12 data, carry out, display and report the results of the following:
 
-#### 
-A. What is the largest number $\hat{σ}^2$ of factors you can test with these data? Why can we not exceed this number?
+### i. Calculate the factor loadings for the 2-factor ML without rotation. List your factor loadings and show biplots of the factor loadings.
 
-#### 
-B. For each k ≤ k^~max~^ , state the number of degrees of freedom of the χ^2^ distribution, the limiting distribution of the test statistic −2 log LR~k~ , and report the p-value for each set of tests.
+### ii. Carry out a sequence of hypothesis tests starting with the one-factor model.
 
-#### 
-C. What is the appropriate k-factor model for the complete and cultivar12 data?
+#### A. What is the largest number $\hat{σ}^2$ of factors you can test with these data? Why can we not exceed this number?
 
-### 
-iii. Compare the results of parts (b) and (c).
+#### B. For each k ≤ k^~max~^ , state the number of degrees of freedom of the χ^2^ distribution, the limiting distribution of the tes statistic −2 log LR~k~ , and report the p-value for each set of tests.
+
+#### C. What is the appropriate k-factor model for the complete and cultivar12 data?
+
+### iii. Compare the results of parts (b) and (c).
 
 # Question 4
 
 ## Consider the Boston Housing data which are available from
-library ( MASS )
-Boston
-attach ( Boston )
-In Lab 5 we used these data with the 11 variables shown in Table 7.3 of Chapter 7.
 
-## 
-(a) Use the split of the 11 variables as in Q3 of Lab 5. Calculate canonical correlation scores. List the strength of the four correlations and show the four CC score plots corresponding to (U•^~j~^, V•~j~ ) for j = 1, . . . , 4.
+library ( MASS ) Boston attach ( Boston ) In Lab 5 we used these data
+with the 11 variables shown in Table 7.3 of Chapter 7.
 
-## 
-(b) Comment on the plots and anything unusual you notice.
+## (a) Use the split of the 11 variables as in Q3 of Lab 5. Calculate canonical correlation scores. List the strength of the four correlations and show the four CC score plots corresponding to (U•^~j~^, V•~j~ ) for j = 1, . . . , 4.
 
-## 
-(c) Use all variables of the Boston Housing data other than chas and add the extra variables zn and lstat to the previous X^[2]^ data to increase these to 6-dimensional data. Use the X^[1]^ data of part (a). Repeat the calculations and graphics of part (a) for these data.
+## (b) Comment on the plots and anything unusual you notice.
 
-## 
-(d) Compare the results of parts (a) and (c) and comment on the differences and why they could occur.
+## (c) Use all variables of the Boston Housing data other than chas and add the extra variables zn and lstat to the previous X^[2]^ data to increase these to 6-dimensional data. Use the X^[1]^ data of part (a). Repeat the calculations and graphics of part (a) for these data.
 
-## 
-(e) Carry out a hypothesis test for the data described in part (c) using the statistic T~k~ of Lecture 5 and the values of the correlation strengths obtained in part (c). Calculate the p-values for each statistic and report these p-values.
+## (d) Compare the results of parts (a) and (c) and comment on thedifferences and why they could occur.
 
-## 
-(f) Using a 1% significance level, make a decision regarding the number of nonzero correlation coefficients of the population model based on your results in part (e).
+## (e) Carry out a hypothesis test for the data described in part (c) using the statistic T~k~ of Lecture 5 and the values of the correlation strengths obtained in part (c). Calculate the p-values for each statistic and report these p-values.
 
-## 
-(g) Does the decision change if you replace the 1% significance level by a 5% significance level? If yes, how? Comment.
+## (f) Using a 1% significance level, make a decision regarding the number of nonzero correlation coefficients of the population model based on your results in part (e).
 
-
-
-
-
+## (g) Does the decision change if you replace the 1% significance level by a 5% significance level? If yes, how? Comment.
