@@ -14,8 +14,8 @@ editor_options:
 ---
 
 ```{r, include=FALSE}
-#setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/STAT3064/Data Sets")
-setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
+# setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/STAT3064/Data Sets")
+# setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
 
 rm(list = ls())
 
@@ -60,7 +60,7 @@ measurement, scaling is not necessarily required.
 
 ```{r}
 ass2pop <- read.csv("ass2pop.csv", header = FALSE)
-S0 = as.matrix(ass2pop[1:11,3:13])
+S0 <- as.matrix(ass2pop[1:11, 3:13])
 S0
 ```
 
@@ -70,8 +70,8 @@ between each pair of the first 11 variables from the first population.
 ### i. the eigenvalues of Σ;
 
 ```{r}
-ev = eigen(S0)
-vals = ev$values
+ev <- eigen(S0)
+vals <- ev$values
 vals
 ```
 
@@ -82,20 +82,20 @@ variability as possible.
 ### ii. the matrix Σ^2/3^;
 
 ```{r}
-V1 = ev$vectors
-vals2 = diag(vals^(2/3) )
-S1 = V1 %*% vals2 %*% t( V1 )
+V1 <- ev$vectors
+vals2 <- diag(vals^(2 / 3))
+S1 <- V1 %*% vals2 %*% t(V1)
 S1
 ```
 
 ### iii. the matrix 2Σ^−1/4^ΣΣ^−1/4^ and its eigenvalues
 
 ```{r}
-vals3 = diag(vals^(-1/4) )
-S2 = V1 %*% vals3 %*% t( V1 )
-mat = 2*S2%*%S0%*%S2
+vals3 <- diag(vals^(-1 / 4))
+S2 <- V1 %*% vals3 %*% t(V1)
+mat <- 2 * S2 %*% S0 %*% S2
 mat
-vals4 = eigen(mat)$values
+vals4 <- eigen(mat)$values
 vals4
 ```
 
@@ -188,26 +188,26 @@ Viscera_weight
 ### (b) Carry out PCR on the raw data using the same variables and response as in part (a). For each additional principal component you add to the regression model as predictor, calculate the residual standard deviation and list which of the variables has the heighest absolute weight in the respective principal component.
 
 ```{r}
-pcr_model1 <- pcr(Rings ~ Whole_weight, data = abalone, scale = F, validation = "CV")
-summary(pcr_model1)
-pcr_model2 <- pcr(Rings ~ Whole_weight + Shucked_weight, data = abalone, scale = F, validation = "CV")
-summary(pcr_model2)
-pcr_model3 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length, data = abalone, scale = F, validation = "CV")
-summary(pcr_model3)
-pcr_model4 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight, data = abalone, scale = F, validation = "CV")
-summary(pcr_model4)
-pcr_model5 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight + Height, data = abalone, scale = F, validation = "CV")
-summary(pcr_model5)
-pcr_model6 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight + Height + Viscera_weight, data = abalone, scale = F, validation = "CV")
-summary(pcr_model6)
-pcr_model7 <- pcr(Rings ~ Shell_weight + Shucked_weight + Length + Whole_weight + Height + Viscera_weight, data = abalone, scale = F, validation = "CV")
-summary(pcr_model7)
+abalone1 <- dplyr::select(
+  abalone,
+  Rings, Shell_weight, Shucked_weight, Length, Whole_weight, Height, Viscera_weight
+)
+abalone_pr <- prcomp(abalone1, scale = F)
+fviz_contrib(abalone_pr, choice = "var", axes = 5) +
+  ggtitle("Contribution of variables to PC") +
+  ylim(0, 50)
+```
+
+```{r}
+set.seed(3064)
+pcr_model <- pcr(Rings ~ ., data = abalone1, scale = F, validation = "CV")
+summary(pcr_model)
 ```
 
 ### (c) In a single graph show plots of residual standard deviation resulting from your models on the y -axis against the number of variables/PC components on the x-axis.
 
 ```{r}
-rsd_df <- data.frame(RMSEP(pcr_model6)$val[1,,])
+rsd_df <- data.frame(RMSEP(pcr_model)$val[1, , ])
 colnames(rsd_df) <- c("pcr")
 rsd_df$modelno <- glancerows$modelno
 rsd_df$lm <- glancerows$sigma
@@ -221,10 +221,14 @@ ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
   geom_line() +
   xlab("modelno") +
   ylab("sigma") +
-  scale_color_manual(labels = c("pcr", "lm")
-                     ,values = c("blue", "red")) +
-  theme(legend.position = c(0.85, 0.5),
-        legend.background = element_rect(fill = "white", color = "black"))
+  scale_color_manual(
+    labels = c("pcr", "lm"),
+    values = c("blue", "red")
+  ) +
+  theme(
+    legend.position = c(0.85, 0.5),
+    legend.background = element_rect(fill = "white", color = "black")
+  )
 ```
 
 ### (d) Explain why you do not require to a variable selection method when selecting the predictors in PCR.
@@ -236,22 +240,22 @@ ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
 ## We consider the 13-dimensional wine recognition data of Example 4.6 and Lab 4. The data are available in the Data Sets folder. Here we want to compare a factor analysis of all observations with those obtained from cultivar 1 and cultivar 2. The cultivar membership of the observations is given in column 1 of the data set. For part of this analysis you may report the relevant results obtained in the lab. You may find it useful to create two data frames: one for the complete data and a separate one for the first two cultivars of the data. We refer to the latter as the *cultivar12* data. Hint. use the R command factanal from the stats library.
 
 ```{r}
-cultivar = read.table(file = 'wine.tsv', sep = ',')
+cultivar <- read.table(file = "wine.tsv", sep = ",")
 
-cultivar12 = cultivar[cultivar$V1 != 3, 2:14]
+cultivar12 <- cultivar[cultivar$V1 != 3, 2:14]
 cultivar12
 
-cultivar = cultivar[,2:14]
+cultivar <- cultivar[, 2:14]
 cultivar
 ```
 
 ## (a) Scale the data and work with the scaled data. How many observations are in the cultivar12 data?
 
 ```{r}
-cultivar_scaled = scale(cultivar, center = TRUE)
+cultivar_scaled <- scale(cultivar, center = TRUE)
 cultivar_scaled
 
-cultivar12_scaled = scale(cultivar12, center = TRUE)
+cultivar12_scaled <- scale(cultivar12, center = TRUE)
 cultivar12_scaled
 ```
 
@@ -262,16 +266,16 @@ There are 130 observations in the cultivar12 data.
 ### i. Calculate the sample covariance matrix of the scaled data and the eigenvalues of this matrix. What is the value of $\hat{σ}^2$ for k=2? How different are the values of $\hat{σ}^2$ for the complete and the two cultivar12 datasets? Hint. You may use the information Box 6.7 in your calculations.
 
 ```{r}
-S1 = cov(cultivar_scaled)
-val1 = eigen(S1)$values
+S1 <- cov(cultivar_scaled)
+val1 <- eigen(S1)$values
 val1
 
-S2 = cov(cultivar12_scaled)
-val2 = eigen(S2)$values
+S2 <- cov(cultivar12_scaled)
+val2 <- eigen(S2)$values
 val2
 
-sigma_hat_sq1 = (1/(13-2))*(sum(val1[3:13]))
-sigma_hat_sq2 = (1/(13-2))*(sum(val2[3:13]))
+sigma_hat_sq1 <- (1 / (13 - 2)) * (sum(val1[3:13]))
+sigma_hat_sq2 <- (1 / (13 - 2)) * (sum(val2[3:13]))
 
 sigma_hat_sq1
 sigma_hat_sq2
@@ -284,27 +288,26 @@ the one for cultivar12 dataset.
 
 ```{r}
 # Factor loading for complete cultivar dataset
-Om1 = diag( rep( sigma_hat_sq1, 13 ) ) 
-S_A1 = S1 - Om1
+Om1 <- diag(rep(sigma_hat_sq1, 13))
+S_A1 <- S1 - Om1
 
-eig_A1 = eigen( S_A1 )
+eig_A1 <- eigen(S_A1)
 
-Gamma_hat_1 = eig_A1$vectors[ ,1:2]
-Lambda_hat_1 =  diag( eig_A1$values[1:2]^(1/2) )
-Ahat1 = Gamma_hat_1 %*% Lambda_hat_1  
+Gamma_hat_1 <- eig_A1$vectors[, 1:2]
+Lambda_hat_1 <- diag(eig_A1$values[1:2]^(1 / 2))
+Ahat1 <- Gamma_hat_1 %*% Lambda_hat_1
 Ahat1
 
 # Factor loading for cultivar12 datasets
-Om2 = diag( rep( sigma_hat_sq2, 13 ) ) 
-S_A2 = S2 - Om2
+Om2 <- diag(rep(sigma_hat_sq2, 13))
+S_A2 <- S2 - Om2
 
-eig_A2 = eigen( S_A2 )
+eig_A2 <- eigen(S_A2)
 
-Gamma_hat_2 = eig_A2$vectors[ ,1:2]
-Lambda_hat_2 =  diag( eig_A2$values[1:2]^(1/2) )
-Ahat2 = Gamma_hat_2%*% Lambda_hat_2 
+Gamma_hat_2 <- eig_A2$vectors[, 1:2]
+Lambda_hat_2 <- diag(eig_A2$values[1:2]^(1 / 2))
+Ahat2 <- Gamma_hat_2 %*% Lambda_hat_2
 Ahat2
-
 ```
 
 ### iii. Show biplots of the factor loadings.
@@ -313,34 +316,34 @@ Ahat2
 wine_pr1 <- prcomp(cultivar_scaled, scale = F)
 wine_pr2 <- prcomp(cultivar12_scaled, scale = F)
 
-biplot( wine_pr1$x, Ahat1, col = c("white", "blue") )
-biplot( wine_pr2$x, Ahat2, col = c("white", "blue") )
+biplot(wine_pr1$x, Ahat1, col = c("white", "blue"))
+biplot(wine_pr2$x, Ahat2, col = c("white", "blue"))
 ```
 
 ### iv. Compare the results obtained from the complete data and the cultivar12 data and comment on the main differences, similarities etc.
 
 The eigenvalues of complete data and cultivar12 data are very similar.
 Hence, the values of $\hat{σ}^2$ for both data are very similar as
-$\hat{σ}^2$ is calculated based on the eigenvalues.
-The eigenvectors and the factor loadings for the complete data and
-cultivar12 data are quite different. The factor loadings for both
-dataset differ in terms of absolute value, relative order by
-size and the sign. This difference can also be seen in the biplots where
-the variables are grouped differently and have different angles.
+$\hat{σ}^2$ is calculated based on the eigenvalues. The eigenvectors and
+the factor loadings for the complete data and cultivar12 data are quite
+different. The factor loadings for both dataset differ in terms of
+absolute value, relative order by size and the sign. This difference can
+also be seen in the biplots where the variables are grouped differently
+and have different angles.
 
 ## (c) We next turn to ML factor loadings and testing. In your calculations use the option "none" for rotation. If you use other commands, you may not achieve full marks for this question. Separately for the complete and for the cultivar12 data, carry out, display and report the results of the following:
 
 ### i. Calculate the factor loadings for the 2-factor ML without rotation. List your factor loadings and show biplots of the factor loadings.
 
 ```{r}
-fa1 = factanal(cultivar_scaled, factors = 2, rotation = "none")$loadings
-fa2 = factanal(cultivar12_scaled, factors = 2, rotation = "none")$loadings
+fa1 <- factanal(cultivar_scaled, factors = 2, rotation = "none")$loadings
+fa2 <- factanal(cultivar12_scaled, factors = 2, rotation = "none")$loadings
 
 fa1
 fa2
 
-biplot( wine_pr1$x, fa1, col = c("white", "blue") )
-biplot( wine_pr1$x, fa2, col = c("white", "blue") )
+biplot(wine_pr1$x, fa1, col = c("white", "blue"))
+biplot(wine_pr1$x, fa2, col = c("white", "blue"))
 ```
 
 ### ii. Carry out a sequence of hypothesis tests starting with the one-factor model.
@@ -385,9 +388,8 @@ for (i in 1:4) {
 
   individualvals <- as.matrix(individual) %*% as.matrix(boston.CC$ycoef[, i])
 
-  plot(envsocialvals, individualvals)  
+  plot(envsocialvals, individualvals)
 }
-
 ```
 
 (b) Comment on the plots and anything unusual you notice.
@@ -418,9 +420,8 @@ for (i in 1:6) {
 
   individualvals <- as.matrix(individual) %*% as.matrix(boston.CC$ycoef[, i])
 
-  plot(envsocialvals, individualvals)  
+  plot(envsocialvals, individualvals)
 }
-
 ```
 
 d\. Compare the results of parts (a) and (c) and comment on the
@@ -443,7 +444,7 @@ Tk <- function(n, d1, d2, cor, k) {
   constant <- n - 0.5 * (d1 + d2 + 3)
   terms <- na.omit(1 - cor[k + 1:length(cor)]^2)
   logterm <- log(prod(terms))
-  result <- - constant * logterm
+  result <- -constant * logterm
   return(result)
 }
 
@@ -453,7 +454,7 @@ d2 <- 6
 for (k in 1:5) {
   tk <- Tk(n, d1, d2, c(boston.CC$cor), k)
   df <- (d1 - k) * (d2 - k)
-  print(paste0("k=" , k, " p-value = ", pchisq(tk, df, lower.tail = FALSE)))
+  print(paste0("k=", k, " p-value = ", pchisq(tk, df, lower.tail = FALSE)))
 }
 ```
 
