@@ -14,7 +14,7 @@ editor_options:
 ---
 
 ```{r, include=FALSE}
-#setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/Data Sets")
+setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/STAT3064/Data Sets")
 #setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
 
 rm(list = ls())
@@ -41,6 +41,8 @@ library(scales)
 library(ggpubr)
 library(dplyr)
 library(factoextra)
+library(broom)
+library(pls)
 ```
 
 # Question 1
@@ -101,11 +103,128 @@ vals4
 
 ## Consider the abalone data. We want to compare the performance of linear regression and PCR for the raw abalone data following the description given in Q3 of Lab 3. In the analysis we use the predictor variables Length, Height, Whole Weight, Shucked Weight, Viscera Weight and Dried-Shell Weight and we consider Rings as the response variable. Hint. Note the change of predictor variables used in Q2 compared to the variables in the Lab.
 
+```{r}
+coln <- c(
+  "Sex", # 		nominal			M, F, and I (infant)
+  "Length", # 		continuous	mm	Longest shell measurement
+  "Diameter", # 	continuous	mm	perpendicular to length
+  "Height", # 		continuous	mm	with meat in shell
+  "Whole_weight", # 	continuous	grams	whole abalone
+  "Shucked_weight", # 	continuous	grams	weight of meat
+  "Viscera_weight", # 	continuous	grams	gut weight (after bleeding)
+  "Shell_weight", # 	continuous	grams	after being dried
+  "Rings" # 		integer			+1.5 gives the age in years
+)
+abalone <- read_csv(file = "./abalone.csv", col_names = coln)
+summary(abalone)
+summary
+```
+
+```{r}
+# Regression
+big.lm <- lm(Rings ~ Length + Height + Whole_weight + Shucked_weight + Viscera_weight + Shell_weight, data = abalone)
+summary(big.lm)
+```
+
 ### (a) For the regular linear regression use forward selection and state the order in which the variables are chosen. Calculate the residual standard deviation for each number of predictors. Hint. you may make use of the code in Lab 3.
+
+```{r}
+glancerows <- data.frame()
+fm.fwd <- fm.null <- lm(Rings ~ 1, abalone)
+summary(lm(fm.fwd))
+row1 <- data.frame(modelno = 0, variable = "Intercept", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Shell_weight)
+row1 <- data.frame(modelno = 1, variable = "Shell_weight", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Shucked_weight)
+row1 <- data.frame(modelno = 2, variable = "Shucked_weight", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Length)
+row1 <- data.frame(modelno = 3, variable = "Length", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Whole_weight)
+row1 <- data.frame(modelno = 4, variable = "Whole_weight", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Height)
+row1 <- data.frame(modelno = 5, variable = "Height", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Viscera_weight)
+row1 <- data.frame(modelno = 6, variable = "Viscera_weight", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+```
+
+```{r}
+glancerows
+```
+
+Shell_weight, Shucked_weight, Length, Whole_weight, Height, Viscera_weight
 
 ### (b) Carry out PCR on the raw data using the same variables and response as in part (a). For each additional principal component you add to the regression model as predictor, calculate the residual standard deviation and list which of the variables has the heighest absolute weight in the respective principal component.
 
+```{r}
+pcr_model1 <- pcr(Rings ~ Whole_weight, data = abalone, scale = F, validation = "CV")
+summary(pcr_model1)
+pcr_model2 <- pcr(Rings ~ Whole_weight + Shucked_weight, data = abalone, scale = F, validation = "CV")
+summary(pcr_model2)
+pcr_model3 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length, data = abalone, scale = F, validation = "CV")
+summary(pcr_model3)
+pcr_model4 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight, data = abalone, scale = F, validation = "CV")
+summary(pcr_model4)
+pcr_model5 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight + Height, data = abalone, scale = F, validation = "CV")
+summary(pcr_model5)
+pcr_model6 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight + Height + Viscera_weight, data = abalone, scale = F, validation = "CV")
+summary(pcr_model6)
+pcr_model7 <- pcr(Rings ~ Shell_weight + Shucked_weight + Length + Whole_weight + Height + Viscera_weight, data = abalone, scale = F, validation = "CV")
+summary(pcr_model7)
+```
+
+
 ### (c) In a single graph show plots of residual standard deviation resulting from your models on the y -axis against the number of variables/PC components on the x-axis.
+
+```{r}
+rsd_df <- data.frame(RMSEP(pcr_model6)$val[1,,])
+colnames(rsd_df) <- c("pcr")
+rsd_df$modelno <- glancerows$modelno
+rsd_df$lm <- glancerows$sigma
+rsd_df
+```
+
+```{r}
+rsd_df2 <- tidyr::pivot_longer(rsd_df, -modelno, names_to = "type", values_to = "value")
+ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
+  geom_point() +
+  geom_line() +
+  xlab("modelno") +
+  ylab("sigma") +
+  scale_color_manual(labels = c("pcr", "lm")
+                     ,values = c("blue", "red")) +
+  theme(legend.position = c(0.85, 0.5),
+        legend.background = element_rect(fill = "white", color = "black"))
+```
+
 
 ### (d) Explain why you do not require to a variable selection method when selecting the predictors in PCR.
 
@@ -189,16 +308,120 @@ the one for cultivar12 dataset.
 library ( MASS ) Boston attach ( Boston ) In Lab 5 we used these data
 with the 11 variables shown in Table 7.3 of Chapter 7.
 
-## (a) Use the split of the 11 variables as in Q3 of Lab 5. Calculate canonical correlation scores. List the strength of the four correlations and show the four CC score plots corresponding to (U•^~j~^, V•~j~ ) for j = 1, . . . , 4.
+```{r}
+attach(Boston)
+Boston
+```
 
-## (b) Comment on the plots and anything unusual you notice.
+(a) Use the split of the 11 variables as in Q3 of Lab 5. Calculate
+    canonical correlation scores. List the strength of the four
+    correlations and show the four CC score plots corresponding to
+    (U•^~j~^, V•~j~ ) for j = 1, . . . , 4.
 
-## (c) Use all variables of the Boston Housing data other than chas and add the extra variables zn and lstat to the previous X^[2]^ data to increase these to 6-dimensional data. Use the X^[1]^ data of part (a). Repeat the calculations and graphics of part (a) for these data.
+```{r}
+Boston.rearranged <- Boston %>% dplyr::select("crim", "indus", "nox", "dis", "rad", "ptratio", "black", "rm", "age", "tax", "medv")
+envsocial <- Boston.rearranged[, 1:7]
+individual <- Boston.rearranged[, 8:11]
 
-## (d) Compare the results of parts (a) and (c) and comment on thedifferences and why they could occur.
+boston.CC <- cancor(envsocial, individual)
 
-## (e) Carry out a hypothesis test for the data described in part (c) using the statistic T~k~ of Lecture 5 and the values of the correlation strengths obtained in part (c). Calculate the p-values for each statistic and report these p-values.
+print("The strength of the four correlations: ")
+print(boston.CC$cor)
 
-## (f) Using a 1% significance level, make a decision regarding the number of nonzero correlation coefficients of the population model based on your results in part (e).
+for (i in 1:4) {
+  envsocialvals <- as.matrix(envsocial) %*% as.matrix(boston.CC$xcoef[, i])
 
-## (g) Does the decision change if you replace the 1% significance level by a 5% significance level? If yes, how? Comment.
+  individualvals <- as.matrix(individual) %*% as.matrix(boston.CC$ycoef[, i])
+
+  plot(envsocialvals, individualvals)  
+}
+
+```
+
+(b) Comment on the plots and anything unusual you notice.
+
+The first CC score plot has the unusual property that the data splits
+into two separate clusters.\
+The second and third CC score plots don't exhibit any interesting
+behavior.\
+The fourth CC score plot shows very little correlation.s
+
+c\. Use all variables of the Boston Housing data other than chas and add
+the extra variables zn and lstat to the previous X^[2]^ data to increase
+these to 6-dimensional data. Use the X^[1]^ data of part (a). Repeat the
+calculations and graphics of part (a) for these data.
+
+```{r}
+Boston.rearranged <- Boston %>% dplyr::select("crim", "indus", "nox", "dis", "rad", "ptratio", "black", "rm", "age", "tax", "medv", "zn", "lstat")
+envsocial <- Boston.rearranged[, 1:7]
+individual <- Boston.rearranged[, 8:13]
+
+boston.CC <- cancor(envsocial, individual)
+
+print("The strength of the four correlations: ")
+print(boston.CC$cor)
+
+for (i in 1:6) {
+  envsocialvals <- as.matrix(envsocial) %*% as.matrix(boston.CC$xcoef[, i])
+
+  individualvals <- as.matrix(individual) %*% as.matrix(boston.CC$ycoef[, i])
+
+  plot(envsocialvals, individualvals)  
+}
+
+```
+
+d\. Compare the results of parts (a) and (c) and comment on the
+differences and why they could occur.
+
+Firstly, the correlation scores are uniformly higher in part (c). This
+is likely because the variance of the additional two variables can be
+used to find correlations in the X1 data.\
+\
+There are also now 6 total pairs of CC scores. This is possible because
+the rank of the data matrix has increased to 6.
+
+e\. Carry out a hypothesis test for the data described in part (c) using
+the statistic T~k~ of Lecture 5 and the values of the correlation
+strengths obtained in part (c). Calculate the p-values for each
+statistic and report these p-values.
+
+```{r}
+Tk <- function(n, d1, d2, cor, k) {
+  constant <- n - 0.5 * (d1 + d2 + 3)
+  terms <- na.omit(1 - cor[k + 1:length(cor)]^2)
+  logterm <- log(prod(terms))
+  result <- - constant * logterm
+  return(result)
+}
+
+n <- 506
+d1 <- 7
+d2 <- 6
+for (k in 1:5) {
+  tk <- Tk(n, d1, d2, c(boston.CC$cor), k)
+  df <- (d1 - k) * (d2 - k)
+  print(paste0("k=" , k, " p-value = ", pchisq(tk, df, lower.tail = FALSE)))
+}
+```
+
+f\. Using a 1% significance level, make a decision regarding the number
+of nonzero correlation coefficients of the population model based on
+your results in part (e).
+
+Looking at the results. At a 1% significance value, we would only retain
+the null hypothesis for k=5.
+
+The hypothesis test at k=5 is
+$H_0^5: v_1 \ne 0, \dots, v_5 \ne 0, v_6 = 0$ vs
+$H_1^5:v_1 \ne 0, \dots, v_6 \ne 0$. Since we fail to reject the null
+hypothesis, we assume that the 6th correlation coefficient is zero.
+
+Therefore we conclude that 1,...,5 are nonzero correlation coefficients
+(thus there are 5).
+
+g\. Does the decision change if you replace the 1% significance level by
+a 5% significance level? If yes, how? Comment.
+
+Yes, it does change. No decisions would be rejected and therefore we
+would assume that there are 6 nonzero correlation coefficients.

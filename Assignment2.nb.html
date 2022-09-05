@@ -1882,11 +1882,284 @@ variables Length, Height, Whole Weight, Shucked Weight, Viscera Weight
 and Dried-Shell Weight and we consider Rings as the response variable.
 Hint. Note the change of predictor variables used in Q2 compared to the
 variables in the Lab.</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29sbiA8LSBjKFxuICBcIlNleFwiLCAjIFx0XHRub21pbmFsXHRcdFx0TSwgRiwgYW5kIEkgKGluZmFudClcbiAgXCJMZW5ndGhcIiwgIyBcdFx0Y29udGludW91c1x0bW1cdExvbmdlc3Qgc2hlbGwgbWVhc3VyZW1lbnRcbiAgXCJEaWFtZXRlclwiLCAjIFx0Y29udGludW91c1x0bW1cdHBlcnBlbmRpY3VsYXIgdG8gbGVuZ3RoXG4gIFwiSGVpZ2h0XCIsICMgXHRcdGNvbnRpbnVvdXNcdG1tXHR3aXRoIG1lYXQgaW4gc2hlbGxcbiAgXCJXaG9sZV93ZWlnaHRcIiwgIyBcdGNvbnRpbnVvdXNcdGdyYW1zXHR3aG9sZSBhYmFsb25lXG4gIFwiU2h1Y2tlZF93ZWlnaHRcIiwgIyBcdGNvbnRpbnVvdXNcdGdyYW1zXHR3ZWlnaHQgb2YgbWVhdFxuICBcIlZpc2NlcmFfd2VpZ2h0XCIsICMgXHRjb250aW51b3VzXHRncmFtc1x0Z3V0IHdlaWdodCAoYWZ0ZXIgYmxlZWRpbmcpXG4gIFwiU2hlbGxfd2VpZ2h0XCIsICMgXHRjb250aW51b3VzXHRncmFtc1x0YWZ0ZXIgYmVpbmcgZHJpZWRcbiAgXCJSaW5nc1wiICMgXHRcdGludGVnZXJcdFx0XHQrMS41IGdpdmVzIHRoZSBhZ2UgaW4geWVhcnNcbilcbmFiYWxvbmUgPC0gcmVhZF9jc3YoZmlsZSA9IFwiLi9hYmFsb25lLmNzdlwiLCBjb2xfbmFtZXMgPSBjb2xuKVxuYGBgIn0= -->
+<pre class="r"><code>coln &lt;- c(
+  &quot;Sex&quot;, #      nominal         M, F, and I (infant)
+  &quot;Length&quot;, #       continuous  mm  Longest shell measurement
+  &quot;Diameter&quot;, #     continuous  mm  perpendicular to length
+  &quot;Height&quot;, #       continuous  mm  with meat in shell
+  &quot;Whole_weight&quot;, #     continuous  grams   whole abalone
+  &quot;Shucked_weight&quot;, #   continuous  grams   weight of meat
+  &quot;Viscera_weight&quot;, #   continuous  grams   gut weight (after bleeding)
+  &quot;Shell_weight&quot;, #     continuous  grams   after being dried
+  &quot;Rings&quot; #         integer         +1.5 gives the age in years
+)
+abalone &lt;- read_csv(file = &quot;./abalone.csv&quot;, col_names = coln)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUm93czogNDE3NyBDb2x1bW5zOiA54pSA4pSAIENvbHVtbiBzcGVjaWZpY2F0aW9uIOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgOKUgFxuRGVsaW1pdGVyOiBcIixcIlxuY2hyICgxKTogU2V4XG5kYmwgKDgpOiBMZW5ndGgsIERpYW1ldGVyLCBIZWlnaHQsIFdob2xlX3dlaWdodCwgU2h1Y2tlZF93ZWlnaHQsIFZpc2NlcmFfd2VpZ2h0LCBTaGVsbF93ZWlnaHQsIFJpbmdzXG7ihLkgVXNlIGBzcGVjKClgIHRvIHJldHJpZXZlIHRoZSBmdWxsIGNvbHVtbiBzcGVjaWZpY2F0aW9uIGZvciB0aGlzIGRhdGEuXG7ihLkgU3BlY2lmeSB0aGUgY29sdW1uIHR5cGVzIG9yIHNldCBgc2hvd19jb2xfdHlwZXMgPSBGQUxTRWAgdG8gcXVpZXQgdGhpcyBtZXNzYWdlLlxuIn0= -->
+<pre><code>Rows: 4177 Columns: 9── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────
+Delimiter: &quot;,&quot;
+chr (1): Sex
+dbl (8): Length, Diameter, Height, Whole_weight, Shucked_weight, Viscera_weight, Shell_weight, Rings
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShhYmFsb25lKVxuYGBgIn0= -->
+<pre class="r"><code>summary(abalone)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgICBTZXggICAgICAgICAgICAgICAgTGVuZ3RoICAgICAgICAgRGlhbWV0ZXIgICAgICAgICAgSGVpZ2h0ICAgICAgICBXaG9sZV93ZWlnaHQgICAgU2h1Y2tlZF93ZWlnaHQgICBWaXNjZXJhX3dlaWdodCAgXG4gTGVuZ3RoOjQxNzcgICAgICAgIE1pbi4gICA6MC4wNzUgICBNaW4uICAgOjAuMDU1MCAgIE1pbi4gICA6MC4wMDAwICAgTWluLiAgIDowLjAwMjAgICBNaW4uICAgOjAuMDAxMCAgIE1pbi4gICA6MC4wMDA1ICBcbiBDbGFzcyA6Y2hhcmFjdGVyICAgMXN0IFF1LjowLjQ1MCAgIDFzdCBRdS46MC4zNTAwICAgMXN0IFF1LjowLjExNTAgICAxc3QgUXUuOjAuNDQxNSAgIDFzdCBRdS46MC4xODYwICAgMXN0IFF1LjowLjA5MzUgIFxuIE1vZGUgIDpjaGFyYWN0ZXIgICBNZWRpYW4gOjAuNTQ1ICAgTWVkaWFuIDowLjQyNTAgICBNZWRpYW4gOjAuMTQwMCAgIE1lZGlhbiA6MC43OTk1ICAgTWVkaWFuIDowLjMzNjAgICBNZWRpYW4gOjAuMTcxMCAgXG4gICAgICAgICAgICAgICAgICAgIE1lYW4gICA6MC41MjQgICBNZWFuICAgOjAuNDA3OSAgIE1lYW4gICA6MC4xMzk1ICAgTWVhbiAgIDowLjgyODcgICBNZWFuICAgOjAuMzU5NCAgIE1lYW4gICA6MC4xODA2ICBcbiAgICAgICAgICAgICAgICAgICAgM3JkIFF1LjowLjYxNSAgIDNyZCBRdS46MC40ODAwICAgM3JkIFF1LjowLjE2NTAgICAzcmQgUXUuOjEuMTUzMCAgIDNyZCBRdS46MC41MDIwICAgM3JkIFF1LjowLjI1MzAgIFxuICAgICAgICAgICAgICAgICAgICBNYXguICAgOjAuODE1ICAgTWF4LiAgIDowLjY1MDAgICBNYXguICAgOjEuMTMwMCAgIE1heC4gICA6Mi44MjU1ICAgTWF4LiAgIDoxLjQ4ODAgICBNYXguICAgOjAuNzYwMCAgXG4gIFNoZWxsX3dlaWdodCAgICAgICAgUmluZ3MgICAgICAgXG4gTWluLiAgIDowLjAwMTUgICBNaW4uICAgOiAxLjAwMCAgXG4gMXN0IFF1LjowLjEzMDAgICAxc3QgUXUuOiA4LjAwMCAgXG4gTWVkaWFuIDowLjIzNDAgICBNZWRpYW4gOiA5LjAwMCAgXG4gTWVhbiAgIDowLjIzODggICBNZWFuICAgOiA5LjkzNCAgXG4gM3JkIFF1LjowLjMyOTAgICAzcmQgUXUuOjExLjAwMCAgXG4gTWF4LiAgIDoxLjAwNTAgICBNYXguICAgOjI5LjAwMCAgXG4ifQ== -->
+<pre><code>     Sex                Length         Diameter          Height        Whole_weight    Shucked_weight   Viscera_weight  
+ Length:4177        Min.   :0.075   Min.   :0.0550   Min.   :0.0000   Min.   :0.0020   Min.   :0.0010   Min.   :0.0005  
+ Class :character   1st Qu.:0.450   1st Qu.:0.3500   1st Qu.:0.1150   1st Qu.:0.4415   1st Qu.:0.1860   1st Qu.:0.0935  
+ Mode  :character   Median :0.545   Median :0.4250   Median :0.1400   Median :0.7995   Median :0.3360   Median :0.1710  
+                    Mean   :0.524   Mean   :0.4079   Mean   :0.1395   Mean   :0.8287   Mean   :0.3594   Mean   :0.1806  
+                    3rd Qu.:0.615   3rd Qu.:0.4800   3rd Qu.:0.1650   3rd Qu.:1.1530   3rd Qu.:0.5020   3rd Qu.:0.2530  
+                    Max.   :0.815   Max.   :0.6500   Max.   :1.1300   Max.   :2.8255   Max.   :1.4880   Max.   :0.7600  
+  Shell_weight        Rings       
+ Min.   :0.0015   Min.   : 1.000  
+ 1st Qu.:0.1300   1st Qu.: 8.000  
+ Median :0.2340   Median : 9.000  
+ Mean   :0.2388   Mean   : 9.934  
+ 3rd Qu.:0.3290   3rd Qu.:11.000  
+ Max.   :1.0050   Max.   :29.000  </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeVxuYGBgIn0= -->
+<pre class="r"><code>summary</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiZnVuY3Rpb24gKG9iamVjdCwgLi4uKSBcblVzZU1ldGhvZChcInN1bW1hcnlcIilcbjxieXRlY29kZTogMHgxMWQyNmM0MDg+XG48ZW52aXJvbm1lbnQ6IG5hbWVzcGFjZTpiYXNlPlxuIn0= -->
+<pre><code>function (object, ...) 
+UseMethod(&quot;summary&quot;)
+&lt;bytecode: 0x11d26c408&gt;
+&lt;environment: namespace:base&gt;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBSZWdyZXNzaW9uXG5iaWcubG0gPC0gbG0oUmluZ3MgfiBMZW5ndGggKyBIZWlnaHQgKyBXaG9sZV93ZWlnaHQgKyBTaHVja2VkX3dlaWdodCArIFZpc2NlcmFfd2VpZ2h0ICsgU2hlbGxfd2VpZ2h0LCBkYXRhID0gYWJhbG9uZSlcbnN1bW1hcnkoYmlnLmxtKVxuYGBgIn0= -->
+<pre class="r"><code># Regression
+big.lm &lt;- lm(Rings ~ Length + Height + Whole_weight + Shucked_weight + Viscera_weight + Shell_weight, data = abalone)
+summary(big.lm)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxubG0oZm9ybXVsYSA9IFJpbmdzIH4gTGVuZ3RoICsgSGVpZ2h0ICsgV2hvbGVfd2VpZ2h0ICsgU2h1Y2tlZF93ZWlnaHQgKyBcbiAgICBWaXNjZXJhX3dlaWdodCArIFNoZWxsX3dlaWdodCwgZGF0YSA9IGFiYWxvbmUpXG5cblJlc2lkdWFsczpcbiAgICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4IFxuLTEyLjE3NTMgIC0xLjM1NTggIC0wLjQwNDcgICAwLjkyMDQgIDE0LjEyODEgXG5cbkNvZWZmaWNpZW50czpcbiAgICAgICAgICAgICAgIEVzdGltYXRlIFN0ZC4gRXJyb3IgdCB2YWx1ZSBQcig+fHR8KSAgICBcbihJbnRlcmNlcHQpICAgICAgMi45Nzg4ICAgICAwLjI3MDIgIDExLjAyMyAgPCAyZS0xNiAqKipcbkxlbmd0aCAgICAgICAgICAgOC4xOTY0ICAgICAwLjgxMjUgIDEwLjA4OCAgPCAyZS0xNiAqKipcbkhlaWdodCAgICAgICAgICAxMi44OTk4ICAgICAxLjU0NDAgICA4LjM1NSAgPCAyZS0xNiAqKipcbldob2xlX3dlaWdodCAgICAgOS4zNTU4ICAgICAwLjczNTUgIDEyLjcyMSAgPCAyZS0xNiAqKipcblNodWNrZWRfd2VpZ2h0IC0yMC4yOTk2ICAgICAwLjgyNjYgLTI0LjU1OCAgPCAyZS0xNiAqKipcblZpc2NlcmFfd2VpZ2h0IC0xMC4xMDg2ICAgICAxLjMwODYgIC03LjcyNSAxLjM5ZS0xNCAqKipcblNoZWxsX3dlaWdodCAgICAgOS4zMjU3ICAgICAxLjEzNDUgICA4LjIyMCAyLjY4ZS0xNiAqKipcbi0tLVxuU2lnbmlmLiBjb2RlczogIDAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuXG5SZXNpZHVhbCBzdGFuZGFyZCBlcnJvcjogMi4yMjcgb24gNDE3MCBkZWdyZWVzIG9mIGZyZWVkb21cbk11bHRpcGxlIFItc3F1YXJlZDogIDAuNTIzNixcdEFkanVzdGVkIFItc3F1YXJlZDogIDAuNTIyOSBcbkYtc3RhdGlzdGljOiA3NjMuOCBvbiA2IGFuZCA0MTcwIERGLCAgcC12YWx1ZTogPCAyLjJlLTE2XG4ifQ== -->
+<pre><code>
+Call:
+lm(formula = Rings ~ Length + Height + Whole_weight + Shucked_weight + 
+    Viscera_weight + Shell_weight, data = abalone)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-12.1753  -1.3558  -0.4047   0.9204  14.1281 
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)      2.9788     0.2702  11.023  &lt; 2e-16 ***
+Length           8.1964     0.8125  10.088  &lt; 2e-16 ***
+Height          12.8998     1.5440   8.355  &lt; 2e-16 ***
+Whole_weight     9.3558     0.7355  12.721  &lt; 2e-16 ***
+Shucked_weight -20.2996     0.8266 -24.558  &lt; 2e-16 ***
+Viscera_weight -10.1086     1.3086  -7.725 1.39e-14 ***
+Shell_weight     9.3257     1.1345   8.220 2.68e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.227 on 4170 degrees of freedom
+Multiple R-squared:  0.5236,    Adjusted R-squared:  0.5229 
+F-statistic: 763.8 on 6 and 4170 DF,  p-value: &lt; 2.2e-16</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 <div id="a-for-the-regular-linear-regression-use-forward-selection-and-state-the-order-in-which-the-variables-are-chosen.-calculate-the-residual-standard-deviation-for-each-number-of-predictors.-hint.-you-may-make-use-of-the-code-in-lab-3." class="section level3">
 <h3>(a) For the regular linear regression use forward selection and
 state the order in which the variables are chosen. Calculate the
 residual standard deviation for each number of predictors. Hint. you may
 make use of the code in Lab 3.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2xhbmNlcm93cyA8LSBkYXRhLmZyYW1lKClcbmZtLmZ3ZCA8LSBmbS5udWxsIDwtIGxtKFJpbmdzIH4gMSwgYWJhbG9uZSlcbnN1bW1hcnkobG0oZm0uZndkKSlcbmBgYCJ9 -->
+<pre class="r"><code>glancerows &lt;- data.frame()
+fm.fwd &lt;- fm.null &lt;- lm(Rings ~ 1, abalone)
+summary(lm(fm.fwd))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxubG0oZm9ybXVsYSA9IGZtLmZ3ZClcblxuUmVzaWR1YWxzOlxuICAgIE1pbiAgICAgIDFRICBNZWRpYW4gICAgICAzUSAgICAgTWF4IFxuLTguOTMzNyAtMS45MzM3IC0wLjkzMzcgIDEuMDY2MyAxOS4wNjYzIFxuXG5Db2VmZmljaWVudHM6XG4gICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHQgdmFsdWUgUHIoPnx0fCkgICAgXG4oSW50ZXJjZXB0KSAgOS45MzM2OCAgICAwLjA0OTg5ICAgMTk5LjEgICA8MmUtMTYgKioqXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuUmVzaWR1YWwgc3RhbmRhcmQgZXJyb3I6IDMuMjI0IG9uIDQxNzYgZGVncmVlcyBvZiBmcmVlZG9tXG4ifQ== -->
+<pre><code>
+Call:
+lm(formula = fm.fwd)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.9337 -1.9337 -0.9337  1.0663 19.0663 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  9.93368    0.04989   199.1   &lt;2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 3.224 on 4176 degrees of freedom</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucm93MSA8LSBkYXRhLmZyYW1lKG1vZGVsbm8gPSAwLCB2YXJpYWJsZSA9IFwiSW50ZXJjZXB0XCIsIHNpZ21hID0gZ2xhbmNlKGxtKGZtLmZ3ZCkpJHNpZ21hKVxuZ2xhbmNlcm93cyA8LSByYmluZChnbGFuY2Vyb3dzLCByb3cxKVxuYWRkMShmbS5md2QsIGJpZy5sbSwgdGVzdCA9IFwiRlwiKVxuYGBgIn0= -->
+<pre class="r"><code>row1 &lt;- data.frame(modelno = 0, variable = &quot;Intercept&quot;, sigma = glance(lm(fm.fwd))$sigma)
+glancerows &lt;- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = &quot;F&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiU2luZ2xlIHRlcm0gYWRkaXRpb25zXG5cbk1vZGVsOlxuUmluZ3MgfiAxXG4gICAgICAgICAgICAgICBEZiBTdW0gb2YgU3EgICBSU1MgICAgQUlDIEYgdmFsdWUgICAgUHIoPkYpICAgIFxuPG5vbmU+ICAgICAgICAgICAgICAgICAgICAgIDQzNDExIDk3ODAuOCAgICAgICAgICAgICAgICAgICAgICBcbkxlbmd0aCAgICAgICAgICAxICAgMTM0NTQuNSAyOTk1NiA4MjMzLjMgMTg3NS4xNyA8IDIuMmUtMTYgKioqXG5IZWlnaHQgICAgICAgICAgMSAgIDEzNDkwLjcgMjk5MjAgODIyOC4yIDE4ODIuNDggPCAyLjJlLTE2ICoqKlxuV2hvbGVfd2VpZ2h0ICAgIDEgICAxMjY3Ni44IDMwNzM0IDgzNDAuMyAxNzIyLjA3IDwgMi4yZS0xNiAqKipcblNodWNrZWRfd2VpZ2h0ICAxICAgIDc2ODkuOSAzNTcyMSA4OTY4LjQgIDg5OC43OSA8IDIuMmUtMTYgKioqXG5WaXNjZXJhX3dlaWdodCAgMSAgIDExMDE5LjEgMzIzOTIgODU1OS44IDE0MjAuMjcgPCAyLjJlLTE2ICoqKlxuU2hlbGxfd2VpZ2h0ICAgIDEgICAxNzA5Ny4yIDI2MzEzIDc2OTEuNyAyNzEyLjcyIDwgMi4yZS0xNiAqKipcbi0tLVxuU2lnbmlmLiBjb2RlczogIDAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuIn0= -->
+<pre><code>Single term additions
+
+Model:
+Rings ~ 1
+               Df Sum of Sq   RSS    AIC F value    Pr(&gt;F)    
+&lt;none&gt;                      43411 9780.8                      
+Length          1   13454.5 29956 8233.3 1875.17 &lt; 2.2e-16 ***
+Height          1   13490.7 29920 8228.2 1882.48 &lt; 2.2e-16 ***
+Whole_weight    1   12676.8 30734 8340.3 1722.07 &lt; 2.2e-16 ***
+Shucked_weight  1    7689.9 35721 8968.4  898.79 &lt; 2.2e-16 ***
+Viscera_weight  1   11019.1 32392 8559.8 1420.27 &lt; 2.2e-16 ***
+Shell_weight    1   17097.2 26313 7691.7 2712.72 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZm0uZndkIDwtIHVwZGF0ZShmbS5md2QsIC4gfiAuICsgU2hlbGxfd2VpZ2h0KVxucm93MSA8LSBkYXRhLmZyYW1lKG1vZGVsbm8gPSAxLCB2YXJpYWJsZSA9IFwiU2hlbGxfd2VpZ2h0XCIsIHNpZ21hID0gZ2xhbmNlKGxtKGZtLmZ3ZCkpJHNpZ21hKVxuZ2xhbmNlcm93cyA8LSByYmluZChnbGFuY2Vyb3dzLCByb3cxKVxuYWRkMShmbS5md2QsIGJpZy5sbSwgdGVzdCA9IFwiRlwiKVxuYGBgIn0= -->
+<pre class="r"><code>fm.fwd &lt;- update(fm.fwd, . ~ . + Shell_weight)
+row1 &lt;- data.frame(modelno = 1, variable = &quot;Shell_weight&quot;, sigma = glance(lm(fm.fwd))$sigma)
+glancerows &lt;- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = &quot;F&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiU2luZ2xlIHRlcm0gYWRkaXRpb25zXG5cbk1vZGVsOlxuUmluZ3MgfiBTaGVsbF93ZWlnaHRcbiAgICAgICAgICAgICAgIERmIFN1bSBvZiBTcSAgIFJTUyAgICBBSUMgIEYgdmFsdWUgICAgUHIoPkYpICAgIFxuPG5vbmU+ICAgICAgICAgICAgICAgICAgICAgIDI2MzEzIDc2OTEuNyAgICAgICAgICAgICAgICAgICAgICAgXG5MZW5ndGggICAgICAgICAgMSAgICAgICA5LjkgMjYzMDQgNzY5Mi4xICAgMS41NzI2ICAgIDAuMjA5OSAgICBcbkhlaWdodCAgICAgICAgICAxICAgICAyNTkuMyAyNjA1NCA3NjUyLjMgIDQxLjUzNzQgMS4yODhlLTEwICoqKlxuV2hvbGVfd2VpZ2h0ICAgIDEgICAgMTc0MC44IDI0NTczIDc0MDcuOCAyOTUuNzAzOSA8IDIuMmUtMTYgKioqXG5TaHVja2VkX3dlaWdodCAgMSAgICAzNDc2LjEgMjI4MzcgNzEwMS45IDYzNS4zMjQ4IDwgMi4yZS0xNiAqKipcblZpc2NlcmFfd2VpZ2h0ICAxICAgIDEwNjcuMCAyNTI0NiA3NTIwLjggMTc2LjQxMDUgPCAyLjJlLTE2ICoqKlxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG4ifQ== -->
+<pre><code>Single term additions
+
+Model:
+Rings ~ Shell_weight
+               Df Sum of Sq   RSS    AIC  F value    Pr(&gt;F)    
+&lt;none&gt;                      26313 7691.7                       
+Length          1       9.9 26304 7692.1   1.5726    0.2099    
+Height          1     259.3 26054 7652.3  41.5374 1.288e-10 ***
+Whole_weight    1    1740.8 24573 7407.8 295.7039 &lt; 2.2e-16 ***
+Shucked_weight  1    3476.1 22837 7101.9 635.3248 &lt; 2.2e-16 ***
+Viscera_weight  1    1067.0 25246 7520.8 176.4105 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZm0uZndkIDwtIHVwZGF0ZShmbS5md2QsIC4gfiAuICsgU2h1Y2tlZF93ZWlnaHQpXG5yb3cxIDwtIGRhdGEuZnJhbWUobW9kZWxubyA9IDIsIHZhcmlhYmxlID0gXCJTaHVja2VkX3dlaWdodFwiLCBzaWdtYSA9IGdsYW5jZShsbShmbS5md2QpKSRzaWdtYSlcbmdsYW5jZXJvd3MgPC0gcmJpbmQoZ2xhbmNlcm93cywgcm93MSlcbmFkZDEoZm0uZndkLCBiaWcubG0sIHRlc3QgPSBcIkZcIilcbmBgYCJ9 -->
+<pre class="r"><code>fm.fwd &lt;- update(fm.fwd, . ~ . + Shucked_weight)
+row1 &lt;- data.frame(modelno = 2, variable = &quot;Shucked_weight&quot;, sigma = glance(lm(fm.fwd))$sigma)
+glancerows &lt;- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = &quot;F&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiU2luZ2xlIHRlcm0gYWRkaXRpb25zXG5cbk1vZGVsOlxuUmluZ3MgfiBTaGVsbF93ZWlnaHQgKyBTaHVja2VkX3dlaWdodFxuICAgICAgICAgICAgICAgRGYgU3VtIG9mIFNxICAgUlNTICAgIEFJQyBGIHZhbHVlICAgIFByKD5GKSAgICBcbjxub25lPiAgICAgICAgICAgICAgICAgICAgICAyMjgzNyA3MTAxLjkgICAgICAgICAgICAgICAgICAgICAgXG5MZW5ndGggICAgICAgICAgMSAgICA5NzguMTcgMjE4NTkgNjkyMS4wICAxODYuNzQgPCAyLjJlLTE2ICoqKlxuSGVpZ2h0ICAgICAgICAgIDEgICAgODAyLjI2IDIyMDM1IDY5NTQuNSAgMTUxLjkzIDwgMi4yZS0xNiAqKipcbldob2xlX3dlaWdodCAgICAxICAgIDgwMy43NyAyMjAzNCA2OTU0LjIgIDE1Mi4yMyA8IDIuMmUtMTYgKioqXG5WaXNjZXJhX3dlaWdodCAgMSAgICAgNzMuOTEgMjI3NjMgNzA5MC40ICAgMTMuNTUgMC4wMDAyMzUzICoqKlxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG4ifQ== -->
+<pre><code>Single term additions
+
+Model:
+Rings ~ Shell_weight + Shucked_weight
+               Df Sum of Sq   RSS    AIC F value    Pr(&gt;F)    
+&lt;none&gt;                      22837 7101.9                      
+Length          1    978.17 21859 6921.0  186.74 &lt; 2.2e-16 ***
+Height          1    802.26 22035 6954.5  151.93 &lt; 2.2e-16 ***
+Whole_weight    1    803.77 22034 6954.2  152.23 &lt; 2.2e-16 ***
+Viscera_weight  1     73.91 22763 7090.4   13.55 0.0002353 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZm0uZndkIDwtIHVwZGF0ZShmbS5md2QsIC4gfiAuICsgTGVuZ3RoKVxucm93MSA8LSBkYXRhLmZyYW1lKG1vZGVsbm8gPSAzLCB2YXJpYWJsZSA9IFwiTGVuZ3RoXCIsIHNpZ21hID0gZ2xhbmNlKGxtKGZtLmZ3ZCkpJHNpZ21hKVxuZ2xhbmNlcm93cyA8LSByYmluZChnbGFuY2Vyb3dzLCByb3cxKVxuYWRkMShmbS5md2QsIGJpZy5sbSwgdGVzdCA9IFwiRlwiKVxuYGBgIn0= -->
+<pre class="r"><code>fm.fwd &lt;- update(fm.fwd, . ~ . + Length)
+row1 &lt;- data.frame(modelno = 3, variable = &quot;Length&quot;, sigma = glance(lm(fm.fwd))$sigma)
+glancerows &lt;- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = &quot;F&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiU2luZ2xlIHRlcm0gYWRkaXRpb25zXG5cbk1vZGVsOlxuUmluZ3MgfiBTaGVsbF93ZWlnaHQgKyBTaHVja2VkX3dlaWdodCArIExlbmd0aFxuICAgICAgICAgICAgICAgRGYgU3VtIG9mIFNxICAgUlNTICAgIEFJQyAgRiB2YWx1ZSBQcig+RikgICAgXG48bm9uZT4gICAgICAgICAgICAgICAgICAgICAgMjE4NTkgNjkyMS4wICAgICAgICAgICAgICAgICAgICBcbkhlaWdodCAgICAgICAgICAxICAgIDM3NS4wNSAyMTQ4NCA2ODUwLjggIDcyLjgzMTggPDJlLTE2ICoqKlxuV2hvbGVfd2VpZ2h0ICAgIDEgICAgNTYzLjQ3IDIxMjk2IDY4MTQuMCAxMTAuMzg4MiA8MmUtMTYgKioqXG5WaXNjZXJhX3dlaWdodCAgMSAgICAgIDMuNTkgMjE4NTYgNjkyMi40ICAgMC42ODQ0IDAuNDA4MSAgICBcbi0tLVxuU2lnbmlmLiBjb2RlczogIDAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuIn0= -->
+<pre><code>Single term additions
+
+Model:
+Rings ~ Shell_weight + Shucked_weight + Length
+               Df Sum of Sq   RSS    AIC  F value Pr(&gt;F)    
+&lt;none&gt;                      21859 6921.0                    
+Height          1    375.05 21484 6850.8  72.8318 &lt;2e-16 ***
+Whole_weight    1    563.47 21296 6814.0 110.3882 &lt;2e-16 ***
+Viscera_weight  1      3.59 21856 6922.4   0.6844 0.4081    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZm0uZndkIDwtIHVwZGF0ZShmbS5md2QsIC4gfiAuICsgV2hvbGVfd2VpZ2h0KVxucm93MSA8LSBkYXRhLmZyYW1lKG1vZGVsbm8gPSA0LCB2YXJpYWJsZSA9IFwiV2hvbGVfd2VpZ2h0XCIsIHNpZ21hID0gZ2xhbmNlKGxtKGZtLmZ3ZCkpJHNpZ21hKVxuZ2xhbmNlcm93cyA8LSByYmluZChnbGFuY2Vyb3dzLCByb3cxKVxuYWRkMShmbS5md2QsIGJpZy5sbSwgdGVzdCA9IFwiRlwiKVxuYGBgIn0= -->
+<pre class="r"><code>fm.fwd &lt;- update(fm.fwd, . ~ . + Whole_weight)
+row1 &lt;- data.frame(modelno = 4, variable = &quot;Whole_weight&quot;, sigma = glance(lm(fm.fwd))$sigma)
+glancerows &lt;- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = &quot;F&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiU2luZ2xlIHRlcm0gYWRkaXRpb25zXG5cbk1vZGVsOlxuUmluZ3MgfiBTaGVsbF93ZWlnaHQgKyBTaHVja2VkX3dlaWdodCArIExlbmd0aCArIFdob2xlX3dlaWdodFxuICAgICAgICAgICAgICAgRGYgU3VtIG9mIFNxICAgUlNTICBBSUMgRiB2YWx1ZSAgICBQcig+RikgICAgXG48bm9uZT4gICAgICAgICAgICAgICAgICAgICAgMjEyOTYgNjgxNCAgICAgICAgICAgICAgICAgICAgICBcbkhlaWdodCAgICAgICAgICAxICAgIDMxOC4zOSAyMDk3NyA2NzUzICA2My4zMDcgMi4yNjFlLTE1ICoqKlxuVmlzY2VyYV93ZWlnaHQgIDEgICAgMjY4LjE3IDIxMDI4IDY3NjMgIDUzLjE5NCAzLjU5N2UtMTMgKioqXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcbiJ9 -->
+<pre><code>Single term additions
+
+Model:
+Rings ~ Shell_weight + Shucked_weight + Length + Whole_weight
+               Df Sum of Sq   RSS  AIC F value    Pr(&gt;F)    
+&lt;none&gt;                      21296 6814                      
+Height          1    318.39 20977 6753  63.307 2.261e-15 ***
+Viscera_weight  1    268.17 21028 6763  53.194 3.597e-13 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZm0uZndkIDwtIHVwZGF0ZShmbS5md2QsIC4gfiAuICsgSGVpZ2h0KVxucm93MSA8LSBkYXRhLmZyYW1lKG1vZGVsbm8gPSA1LCB2YXJpYWJsZSA9IFwiSGVpZ2h0XCIsIHNpZ21hID0gZ2xhbmNlKGxtKGZtLmZ3ZCkpJHNpZ21hKVxuZ2xhbmNlcm93cyA8LSByYmluZChnbGFuY2Vyb3dzLCByb3cxKVxuYWRkMShmbS5md2QsIGJpZy5sbSwgdGVzdCA9IFwiRlwiKVxuYGBgIn0= -->
+<pre class="r"><code>fm.fwd &lt;- update(fm.fwd, . ~ . + Height)
+row1 &lt;- data.frame(modelno = 5, variable = &quot;Height&quot;, sigma = glance(lm(fm.fwd))$sigma)
+glancerows &lt;- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = &quot;F&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiU2luZ2xlIHRlcm0gYWRkaXRpb25zXG5cbk1vZGVsOlxuUmluZ3MgfiBTaGVsbF93ZWlnaHQgKyBTaHVja2VkX3dlaWdodCArIExlbmd0aCArIFdob2xlX3dlaWdodCArIFxuICAgIEhlaWdodFxuICAgICAgICAgICAgICAgRGYgU3VtIG9mIFNxICAgUlNTICAgIEFJQyBGIHZhbHVlICAgIFByKD5GKSAgICBcbjxub25lPiAgICAgICAgICAgICAgICAgICAgICAyMDk3NyA2NzUzLjAgICAgICAgICAgICAgICAgICAgICAgXG5WaXNjZXJhX3dlaWdodCAgMSAgICAyOTUuOTYgMjA2ODEgNjY5NS43ICA1OS42NzQgMS4zOTNlLTE0ICoqKlxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG4ifQ== -->
+<pre><code>Single term additions
+
+Model:
+Rings ~ Shell_weight + Shucked_weight + Length + Whole_weight + 
+    Height
+               Df Sum of Sq   RSS    AIC F value    Pr(&gt;F)    
+&lt;none&gt;                      20977 6753.0                      
+Viscera_weight  1    295.96 20681 6695.7  59.674 1.393e-14 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZm0uZndkIDwtIHVwZGF0ZShmbS5md2QsIC4gfiAuICsgVmlzY2VyYV93ZWlnaHQpXG5yb3cxIDwtIGRhdGEuZnJhbWUobW9kZWxubyA9IDYsIHZhcmlhYmxlID0gXCJWaXNjZXJhX3dlaWdodFwiLCBzaWdtYSA9IGdsYW5jZShsbShmbS5md2QpKSRzaWdtYSlcbmdsYW5jZXJvd3MgPC0gcmJpbmQoZ2xhbmNlcm93cywgcm93MSlcbmBgYCJ9 -->
+<pre class="r"><code>fm.fwd &lt;- update(fm.fwd, . ~ . + Viscera_weight)
+row1 &lt;- data.frame(modelno = 6, variable = &quot;Viscera_weight&quot;, sigma = glance(lm(fm.fwd))$sigma)
+glancerows &lt;- rbind(glancerows, row1)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2xhbmNlcm93c1xuYGBgIn0= -->
+<pre class="r"><code>glancerows</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NywibmNvbCI6Mywic3VtbWFyeSI6eyJEZXNjcmlwdGlvbiI6WyJkZiBbNyDDlyAzXSJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUExMVJ1MDdETUJSMWtvWTBnWmFXZ2dSaTY4QkV1N0NBaElRSGhFQWdnU2lQU2d6SVRVMFQxYldyUENpcWhOU0ZmMkRsSi9pSkRrWHdBYXlNSFZoZ0tEaUpqV2dzV2ZmZWszUHV6ZkU5M2ExdldIVUxBS0NCaktvQVRlY3AwTS9QOWlxYmdDTzhVRUFHbUZHODQ2UlN6QVFnejY4QnhOa1pKeEdLR21aRkxJaTRLT0t5VklCQ3JFOGFtd2Mwd0o2TnU0RUE1bW9PSnVTNmg5MldJN0Y4elFudE5tNU9vek5IbUxZQ1Irb3VIVVp3aXJFLzFlWEM5VzNzSWNrUlJxQTVYQ212RjBPWVdScU1IcC91b2Zyc3I3MTlEcUY2ZlBqYVp5ZFFMYzJ1WGhYN1VCbS9qNzYzdjZEeThsRitXRWkva0U1UkIvdkNuU1pBbzhPYW1GQW15dXd0OGx6VUlGaHFmTGZWUWFsR3BzZDZWZGtzeDY4NlNKN05TRSswQ2ZMbFJBbGFUUlNnNm8zSDlieWFwQ1FHNndZdW8xeWtSc3ZVVTJMRlN3SHpJWTMrcEZteG5aQzJLMXZSZ1BoemNuSWlOLzdsV2pKUy9SR3RkTGtMdml5WC9qa25xSUdKWEF4M0hCdXVkajJYeW5WWkhQV3JBUXVRNUZrMkl4S0p2WUhKTCtIdlJGWERBZ0FBIn0= -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["modelno"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["variable"],"name":[2],"type":["chr"],"align":["left"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"0","2":"Intercept","3":"3.224169"},{"1":"1","2":"Shell_weight","3":"2.510500"},{"1":"2","2":"Shucked_weight","3":"2.339087"},{"1":"3","2":"Length","3":"2.288719"},{"1":"4","2":"Whole_weight","3":"2.259299"},{"1":"5","2":"Height","3":"2.242614"},{"1":"6","2":"Viscera_weight","3":"2.227005"}],"options":{"columns":{"min":{},"max":[10],"total":[3]},"rows":{"min":[10],"max":[10],"total":[7]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Shell_weight, Shucked_weight, Length, Whole_weight, Height,
+Viscera_weight</p>
 </div>
 <div id="b-carry-out-pcr-on-the-raw-data-using-the-same-variables-and-response-as-in-part-a.-for-each-additional-principal-component-you-add-to-the-regression-model-as-predictor-calculate-the-residual-standard-deviation-and-list-which-of-the-variables-has-the-heighest-absolute-weight-in-the-respective-principal-component." class="section level3">
 <h3>(b) Carry out PCR on the raw data using the same variables and
@@ -1894,11 +2167,211 @@ response as in part (a). For each additional principal component you add
 to the regression model as predictor, calculate the residual standard
 deviation and list which of the variables has the heighest absolute
 weight in the respective principal component.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGNyX21vZGVsMSA8LSBwY3IoUmluZ3MgfiBXaG9sZV93ZWlnaHQsIGRhdGEgPSBhYmFsb25lLCBzY2FsZSA9IEYsIHZhbGlkYXRpb24gPSBcIkNWXCIpXG5zdW1tYXJ5KHBjcl9tb2RlbDEpXG5gYGAifQ== -->
+<pre class="r"><code>pcr_model1 &lt;- pcr(Rings ~ Whole_weight, data = abalone, scale = F, validation = &quot;CV&quot;)
+summary(pcr_model1)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRGF0YTogXHRYIGRpbWVuc2lvbjogNDE3NyAxIFxuXHRZIGRpbWVuc2lvbjogNDE3NyAxXG5GaXQgbWV0aG9kOiBzdmRwY1xuTnVtYmVyIG9mIGNvbXBvbmVudHMgY29uc2lkZXJlZDogMVxuXG5WQUxJREFUSU9OOiBSTVNFUFxuQ3Jvc3MtdmFsaWRhdGVkIHVzaW5nIDEwIHJhbmRvbSBzZWdtZW50cy5cbiAgICAgICAoSW50ZXJjZXB0KSAgMSBjb21wc1xuQ1YgICAgICAgICAgIDMuMjI1ICAgIDIuNzE0XG5hZGpDViAgICAgICAgMy4yMjUgICAgMi43MTRcblxuVFJBSU5JTkc6ICUgdmFyaWFuY2UgZXhwbGFpbmVkXG4gICAgICAgMSBjb21wc1xuWCAgICAgICAgMTAwLjBcblJpbmdzICAgICAyOS4yXG4ifQ== -->
+<pre><code>Data:   X dimension: 4177 1 
+    Y dimension: 4177 1
+Fit method: svdpc
+Number of components considered: 1
+
+VALIDATION: RMSEP
+Cross-validated using 10 random segments.
+       (Intercept)  1 comps
+CV           3.225    2.714
+adjCV        3.225    2.714
+
+TRAINING: % variance explained
+       1 comps
+X        100.0
+Rings     29.2</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGNyX21vZGVsMiA8LSBwY3IoUmluZ3MgfiBXaG9sZV93ZWlnaHQgKyBTaHVja2VkX3dlaWdodCwgZGF0YSA9IGFiYWxvbmUsIHNjYWxlID0gRiwgdmFsaWRhdGlvbiA9IFwiQ1ZcIilcbnN1bW1hcnkocGNyX21vZGVsMilcbmBgYCJ9 -->
+<pre class="r"><code>pcr_model2 &lt;- pcr(Rings ~ Whole_weight + Shucked_weight, data = abalone, scale = F, validation = &quot;CV&quot;)
+summary(pcr_model2)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRGF0YTogXHRYIGRpbWVuc2lvbjogNDE3NyAyIFxuXHRZIGRpbWVuc2lvbjogNDE3NyAxXG5GaXQgbWV0aG9kOiBzdmRwY1xuTnVtYmVyIG9mIGNvbXBvbmVudHMgY29uc2lkZXJlZDogMlxuXG5WQUxJREFUSU9OOiBSTVNFUFxuQ3Jvc3MtdmFsaWRhdGVkIHVzaW5nIDEwIHJhbmRvbSBzZWdtZW50cy5cbiAgICAgICAoSW50ZXJjZXB0KSAgMSBjb21wcyAgMiBjb21wc1xuQ1YgICAgICAgICAgIDMuMjI1ICAgICAyLjc1ICAgIDIuMzU0XG5hZGpDViAgICAgICAgMy4yMjUgICAgIDIuNzUgICAgMi4zNTRcblxuVFJBSU5JTkc6ICUgdmFyaWFuY2UgZXhwbGFpbmVkXG4gICAgICAgMSBjb21wcyAgMiBjb21wc1xuWCAgICAgICAgOTkuMTQgICAgMTAwLjBcblJpbmdzICAgIDI3LjMyICAgICA0Ni44XG4ifQ== -->
+<pre><code>Data:   X dimension: 4177 2 
+    Y dimension: 4177 1
+Fit method: svdpc
+Number of components considered: 2
+
+VALIDATION: RMSEP
+Cross-validated using 10 random segments.
+       (Intercept)  1 comps  2 comps
+CV           3.225     2.75    2.354
+adjCV        3.225     2.75    2.354
+
+TRAINING: % variance explained
+       1 comps  2 comps
+X        99.14    100.0
+Rings    27.32     46.8</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGNyX21vZGVsMyA8LSBwY3IoUmluZ3MgfiBXaG9sZV93ZWlnaHQgKyBTaHVja2VkX3dlaWdodCArIExlbmd0aCwgZGF0YSA9IGFiYWxvbmUsIHNjYWxlID0gRiwgdmFsaWRhdGlvbiA9IFwiQ1ZcIilcbnN1bW1hcnkocGNyX21vZGVsMylcbmBgYCJ9 -->
+<pre class="r"><code>pcr_model3 &lt;- pcr(Rings ~ Whole_weight + Shucked_weight + Length, data = abalone, scale = F, validation = &quot;CV&quot;)
+summary(pcr_model3)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRGF0YTogXHRYIGRpbWVuc2lvbjogNDE3NyAzIFxuXHRZIGRpbWVuc2lvbjogNDE3NyAxXG5GaXQgbWV0aG9kOiBzdmRwY1xuTnVtYmVyIG9mIGNvbXBvbmVudHMgY29uc2lkZXJlZDogM1xuXG5WQUxJREFUSU9OOiBSTVNFUFxuQ3Jvc3MtdmFsaWRhdGVkIHVzaW5nIDEwIHJhbmRvbSBzZWdtZW50cy5cbiAgICAgICAoSW50ZXJjZXB0KSAgMSBjb21wcyAgMiBjb21wcyAgMyBjb21wc1xuQ1YgICAgICAgICAgIDMuMjI1ICAgIDIuNzQ0ICAgIDIuMzAyICAgIDIuMzAzXG5hZGpDViAgICAgICAgMy4yMjUgICAgMi43NDQgICAgMi4zMDIgICAgMi4zMDNcblxuVFJBSU5JTkc6ICUgdmFyaWFuY2UgZXhwbGFpbmVkXG4gICAgICAgMSBjb21wcyAgMiBjb21wcyAgMyBjb21wc1xuWCAgICAgICAgOTguNTIgICAgOTkuMzYgICAxMDAuMDBcblJpbmdzICAgIDI3LjY1ICAgIDQ5LjE2ICAgIDQ5LjE3XG4ifQ== -->
+<pre><code>Data:   X dimension: 4177 3 
+    Y dimension: 4177 1
+Fit method: svdpc
+Number of components considered: 3
+
+VALIDATION: RMSEP
+Cross-validated using 10 random segments.
+       (Intercept)  1 comps  2 comps  3 comps
+CV           3.225    2.744    2.302    2.303
+adjCV        3.225    2.744    2.302    2.303
+
+TRAINING: % variance explained
+       1 comps  2 comps  3 comps
+X        98.52    99.36   100.00
+Rings    27.65    49.16    49.17</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGNyX21vZGVsNCA8LSBwY3IoUmluZ3MgfiBXaG9sZV93ZWlnaHQgKyBTaHVja2VkX3dlaWdodCArIExlbmd0aCArIFNoZWxsX3dlaWdodCwgZGF0YSA9IGFiYWxvbmUsIHNjYWxlID0gRiwgdmFsaWRhdGlvbiA9IFwiQ1ZcIilcbnN1bW1hcnkocGNyX21vZGVsNClcbmBgYCJ9 -->
+<pre class="r"><code>pcr_model4 &lt;- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight, data = abalone, scale = F, validation = &quot;CV&quot;)
+summary(pcr_model4)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRGF0YTogXHRYIGRpbWVuc2lvbjogNDE3NyA0IFxuXHRZIGRpbWVuc2lvbjogNDE3NyAxXG5GaXQgbWV0aG9kOiBzdmRwY1xuTnVtYmVyIG9mIGNvbXBvbmVudHMgY29uc2lkZXJlZDogNFxuXG5WQUxJREFUSU9OOiBSTVNFUFxuQ3Jvc3MtdmFsaWRhdGVkIHVzaW5nIDEwIHJhbmRvbSBzZWdtZW50cy5cbiAgICAgICAoSW50ZXJjZXB0KSAgMSBjb21wcyAgMiBjb21wcyAgMyBjb21wcyAgNCBjb21wc1xuQ1YgICAgICAgICAgIDMuMjI1ICAgIDIuNzI5ICAgIDIuMjczICAgIDIuMjYyICAgIDIuMjYzXG5hZGpDViAgICAgICAgMy4yMjUgICAgMi43MjkgICAgMi4yNzIgICAgMi4yNjIgICAgMi4yNjNcblxuVFJBSU5JTkc6ICUgdmFyaWFuY2UgZXhwbGFpbmVkXG4gICAgICAgMSBjb21wcyAgMiBjb21wcyAgMyBjb21wcyAgNCBjb21wc1xuWCAgICAgICAgOTguMDQgICAgOTkuMTkgICAgOTkuNzkgICAxMDAuMDBcblJpbmdzICAgIDI4LjQ1ICAgIDUwLjQyICAgIDUwLjg5ICAgIDUwLjk0XG4ifQ== -->
+<pre><code>Data:   X dimension: 4177 4 
+    Y dimension: 4177 1
+Fit method: svdpc
+Number of components considered: 4
+
+VALIDATION: RMSEP
+Cross-validated using 10 random segments.
+       (Intercept)  1 comps  2 comps  3 comps  4 comps
+CV           3.225    2.729    2.273    2.262    2.263
+adjCV        3.225    2.729    2.272    2.262    2.263
+
+TRAINING: % variance explained
+       1 comps  2 comps  3 comps  4 comps
+X        98.04    99.19    99.79   100.00
+Rings    28.45    50.42    50.89    50.94</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGNyX21vZGVsNSA8LSBwY3IoUmluZ3MgfiBXaG9sZV93ZWlnaHQgKyBTaHVja2VkX3dlaWdodCArIExlbmd0aCArIFNoZWxsX3dlaWdodCArIEhlaWdodCwgZGF0YSA9IGFiYWxvbmUsIHNjYWxlID0gRiwgdmFsaWRhdGlvbiA9IFwiQ1ZcIilcbnN1bW1hcnkocGNyX21vZGVsNSlcbmBgYCJ9 -->
+<pre class="r"><code>pcr_model5 &lt;- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight + Height, data = abalone, scale = F, validation = &quot;CV&quot;)
+summary(pcr_model5)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRGF0YTogXHRYIGRpbWVuc2lvbjogNDE3NyA1IFxuXHRZIGRpbWVuc2lvbjogNDE3NyAxXG5GaXQgbWV0aG9kOiBzdmRwY1xuTnVtYmVyIG9mIGNvbXBvbmVudHMgY29uc2lkZXJlZDogNVxuXG5WQUxJREFUSU9OOiBSTVNFUFxuQ3Jvc3MtdmFsaWRhdGVkIHVzaW5nIDEwIHJhbmRvbSBzZWdtZW50cy5cbiAgICAgICAoSW50ZXJjZXB0KSAgMSBjb21wcyAgMiBjb21wcyAgMyBjb21wcyAgNCBjb21wcyAgNSBjb21wc1xuQ1YgICAgICAgICAgIDMuMjI1ICAgIDIuNzI3ICAgIDIuMjYyICAgIDIuMjUzICAgIDIuMjU0ICAgIDIuMjY2XG5hZGpDViAgICAgICAgMy4yMjUgICAgMi43MjcgICAgMi4yNjIgICAgMi4yNTMgICAgMi4yNTQgICAgMi4yNjRcblxuVFJBSU5JTkc6ICUgdmFyaWFuY2UgZXhwbGFpbmVkXG4gICAgICAgMSBjb21wcyAgMiBjb21wcyAgMyBjb21wcyAgNCBjb21wcyAgNSBjb21wc1xuWCAgICAgICAgOTcuODggICAgOTkuMDMgICAgOTkuNjQgICAgOTkuODUgICAxMDAuMDBcblJpbmdzICAgIDI4LjUwICAgIDUwLjg2ICAgIDUxLjI2ICAgIDUxLjMwICAgIDUxLjY4XG4ifQ== -->
+<pre><code>Data:   X dimension: 4177 5 
+    Y dimension: 4177 1
+Fit method: svdpc
+Number of components considered: 5
+
+VALIDATION: RMSEP
+Cross-validated using 10 random segments.
+       (Intercept)  1 comps  2 comps  3 comps  4 comps  5 comps
+CV           3.225    2.727    2.262    2.253    2.254    2.266
+adjCV        3.225    2.727    2.262    2.253    2.254    2.264
+
+TRAINING: % variance explained
+       1 comps  2 comps  3 comps  4 comps  5 comps
+X        97.88    99.03    99.64    99.85   100.00
+Rings    28.50    50.86    51.26    51.30    51.68</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGNyX21vZGVsNiA8LSBwY3IoUmluZ3MgfiBXaG9sZV93ZWlnaHQgKyBTaHVja2VkX3dlaWdodCArIExlbmd0aCArIFNoZWxsX3dlaWdodCArIEhlaWdodCArIFZpc2NlcmFfd2VpZ2h0LCBkYXRhID0gYWJhbG9uZSwgc2NhbGUgPSBGLCB2YWxpZGF0aW9uID0gXCJDVlwiKVxuc3VtbWFyeShwY3JfbW9kZWw2KVxuYGBgIn0= -->
+<pre class="r"><code>pcr_model6 &lt;- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight + Height + Viscera_weight, data = abalone, scale = F, validation = &quot;CV&quot;)
+summary(pcr_model6)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRGF0YTogXHRYIGRpbWVuc2lvbjogNDE3NyA2IFxuXHRZIGRpbWVuc2lvbjogNDE3NyAxXG5GaXQgbWV0aG9kOiBzdmRwY1xuTnVtYmVyIG9mIGNvbXBvbmVudHMgY29uc2lkZXJlZDogNlxuXG5WQUxJREFUSU9OOiBSTVNFUFxuQ3Jvc3MtdmFsaWRhdGVkIHVzaW5nIDEwIHJhbmRvbSBzZWdtZW50cy5cbiAgICAgICAoSW50ZXJjZXB0KSAgMSBjb21wcyAgMiBjb21wcyAgMyBjb21wcyAgNCBjb21wcyAgNSBjb21wcyAgNiBjb21wc1xuQ1YgICAgICAgICAgIDMuMjI1ICAgIDIuNzI4ICAgIDIuMjY0ICAgIDIuMjU1ICAgIDIuMjUzICAgIDIuMjQ3ICAgIDIuMjU0XG5hZGpDViAgICAgICAgMy4yMjUgICAgMi43MjggICAgMi4yNjQgICAgMi4yNTUgICAgMi4yNTMgICAgMi4yNDkgICAgMi4yNTJcblxuVFJBSU5JTkc6ICUgdmFyaWFuY2UgZXhwbGFpbmVkXG4gICAgICAgMSBjb21wcyAgMiBjb21wcyAgMyBjb21wcyAgNCBjb21wcyAgNSBjb21wcyAgNiBjb21wc1xuWCAgICAgICAgOTcuNzEgICAgOTguODIgICAgOTkuNDIgICAgOTkuNzMgICAgOTkuODcgICAxMDAuMDBcblJpbmdzICAgIDI4LjQ2ICAgIDUwLjcyICAgIDUxLjExICAgIDUxLjI5ICAgIDUxLjM4ICAgIDUyLjM2XG4ifQ== -->
+<pre><code>Data:   X dimension: 4177 6 
+    Y dimension: 4177 1
+Fit method: svdpc
+Number of components considered: 6
+
+VALIDATION: RMSEP
+Cross-validated using 10 random segments.
+       (Intercept)  1 comps  2 comps  3 comps  4 comps  5 comps  6 comps
+CV           3.225    2.728    2.264    2.255    2.253    2.247    2.254
+adjCV        3.225    2.728    2.264    2.255    2.253    2.249    2.252
+
+TRAINING: % variance explained
+       1 comps  2 comps  3 comps  4 comps  5 comps  6 comps
+X        97.71    98.82    99.42    99.73    99.87   100.00
+Rings    28.46    50.72    51.11    51.29    51.38    52.36</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGNyX21vZGVsNyA8LSBwY3IoUmluZ3MgfiBTaGVsbF93ZWlnaHQgKyBTaHVja2VkX3dlaWdodCArIExlbmd0aCArIFdob2xlX3dlaWdodCArIEhlaWdodCArIFZpc2NlcmFfd2VpZ2h0LCBkYXRhID0gYWJhbG9uZSwgc2NhbGUgPSBGLCB2YWxpZGF0aW9uID0gXCJDVlwiKVxuc3VtbWFyeShwY3JfbW9kZWw3KVxuYGBgIn0= -->
+<pre class="r"><code>pcr_model7 &lt;- pcr(Rings ~ Shell_weight + Shucked_weight + Length + Whole_weight + Height + Viscera_weight, data = abalone, scale = F, validation = &quot;CV&quot;)
+summary(pcr_model7)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRGF0YTogXHRYIGRpbWVuc2lvbjogNDE3NyA2IFxuXHRZIGRpbWVuc2lvbjogNDE3NyAxXG5GaXQgbWV0aG9kOiBzdmRwY1xuTnVtYmVyIG9mIGNvbXBvbmVudHMgY29uc2lkZXJlZDogNlxuXG5WQUxJREFUSU9OOiBSTVNFUFxuQ3Jvc3MtdmFsaWRhdGVkIHVzaW5nIDEwIHJhbmRvbSBzZWdtZW50cy5cbiAgICAgICAoSW50ZXJjZXB0KSAgMSBjb21wcyAgMiBjb21wcyAgMyBjb21wcyAgNCBjb21wcyAgNSBjb21wcyAgNiBjb21wc1xuQ1YgICAgICAgICAgIDMuMjI1ICAgIDIuNzI5ICAgIDIuMjY2ICAgIDIuMjU4ICAgIDIuMjU1ICAgIDIuMjQ5ICAgIDIuMjUxXG5hZGpDViAgICAgICAgMy4yMjUgICAgMi43MjkgICAgMi4yNjYgICAgMi4yNTggICAgMi4yNTUgICAgMi4yNTEgICAgMi4yNDlcblxuVFJBSU5JTkc6ICUgdmFyaWFuY2UgZXhwbGFpbmVkXG4gICAgICAgMSBjb21wcyAgMiBjb21wcyAgMyBjb21wcyAgNCBjb21wcyAgNSBjb21wcyAgNiBjb21wc1xuWCAgICAgICAgOTcuNzEgICAgOTguODIgICAgOTkuNDIgICAgOTkuNzMgICAgOTkuODcgICAxMDAuMDBcblJpbmdzICAgIDI4LjQ2ICAgIDUwLjcyICAgIDUxLjExICAgIDUxLjI5ICAgIDUxLjM4ICAgIDUyLjM2XG4ifQ== -->
+<pre><code>Data:   X dimension: 4177 6 
+    Y dimension: 4177 1
+Fit method: svdpc
+Number of components considered: 6
+
+VALIDATION: RMSEP
+Cross-validated using 10 random segments.
+       (Intercept)  1 comps  2 comps  3 comps  4 comps  5 comps  6 comps
+CV           3.225    2.729    2.266    2.258    2.255    2.249    2.251
+adjCV        3.225    2.729    2.266    2.258    2.255    2.251    2.249
+
+TRAINING: % variance explained
+       1 comps  2 comps  3 comps  4 comps  5 comps  6 comps
+X        97.71    98.82    99.42    99.73    99.87   100.00
+Rings    28.46    50.72    51.11    51.29    51.38    52.36</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 </div>
 <div id="c-in-a-single-graph-show-plots-of-residual-standard-deviation-resulting-from-your-models-on-the-y--axis-against-the-number-of-variablespc-components-on-the-x-axis." class="section level3">
 <h3>(c) In a single graph show plots of residual standard deviation
 resulting from your models on the y -axis against the number of
 variables/PC components on the x-axis.</h3>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucnNkX2RmIDwtIGRhdGEuZnJhbWUoUk1TRVAocGNyX21vZGVsNikkdmFsWzEsLF0pXG5jb2xuYW1lcyhyc2RfZGYpIDwtIGMoXCJwY3JcIilcbnJzZF9kZiRtb2RlbG5vIDwtIGdsYW5jZXJvd3MkbW9kZWxub1xucnNkX2RmJGxtIDwtIGdsYW5jZXJvd3Mkc2lnbWFcbnJzZF9kZlxuYGBgIn0= -->
+<pre class="r"><code>rsd_df &lt;- data.frame(RMSEP(pcr_model6)$val[1,,])
+colnames(rsd_df) &lt;- c(&quot;pcr&quot;)
+rsd_df$modelno &lt;- glancerows$modelno
+rsd_df$lm &lt;- glancerows$sigma
+rsd_df</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-frame-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImRhdGEuZnJhbWUiXSwibnJvdyI6NywibmNvbCI6Mywic3VtbWFyeSI6eyJEZXNjcmlwdGlvbiI6WyJkZiBbNyDDlyAzXSJdfX0sInJkZiI6Ikg0c0lBQUFBQUFBQUF3dHlpVERtaXVCaVlHQmdabUJoWW1SZ1pnVXlHVmhEUTl4MExSaUFJa0FPSXdNTEF5ZUlyZ0FxRWdhclpHRGdBMkoyQjg3VGo1c2ZpN281c0Y1aS8zdlV3TStCU1RZK1NWNHR6SUdKMjJqVjV4dWNEa3lzVjI0OEVuVnhZUHp4VW52N2ljY09UT3o2NWhtSFY4SDBNMENCL1FjSTdRRGxPM0JBYVFFb0xRS2xKV0E2NFBaTEt1a0lsanF3aURhY243R3cxb0ZwVzdIYTVTK25IWmo4dlM5VjVRYzRNQWx6UzBjTFZqa3dmcmgvL3BmTlR3ZkdDeStVV29YUVBjYWFsNWliV2d4a0NFQ0NBU3pJWEpCY0JHV3k1K2FucE9iazVVTzVURG01YUFad0Z1V1g2eUVid2c2VjROYnd6Q3RKTFVwT0xTalJoQmxtcUpDY24xdFFET01hb1hLTlVia21xRnhUVks0WmxJdm1uZVNjeEdLWVMyQ0NYQ21KSllsNmFVVkFSd0o1LzlDMHNPY1hsR1RtNXdFMU1ZRWltQlZOTTJNUm1vQkFhUjdJdXltNnlSbWxlZG02aGdZZ0c4RHlFTXdMcGRtUjJNd1FPNW4rUTgxaWhackZscHFYbnBtWENuTjhUbUpTYWc2VXd3Y01WM0N3NmhVVVplYVZ3THdDRkMzV0s4a3ZTWVNwNDByT3o0R0pnRDNIOEE4QW00OFV2ZGdDQUFBPSJ9 -->
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["pcr"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["modelno"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["lm"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"3.224555","2":"0","3":"3.224169","_rn_":"(Intercept)"},{"1":"2.727554","2":"1","3":"2.510500","_rn_":"1 comps"},{"1":"2.264342","2":"2","3":"2.339087","_rn_":"2 comps"},{"1":"2.255468","2":"3","3":"2.288719","_rn_":"3 comps"},{"1":"2.252847","2":"4","3":"2.259299","_rn_":"4 comps"},{"1":"2.246538","2":"5","3":"2.242614","_rn_":"5 comps"},{"1":"2.253508","2":"6","3":"2.227005","_rn_":"6 comps"}],"options":{"columns":{"min":{},"max":[10],"total":[3]},"rows":{"min":[10],"max":[10],"total":[7]},"pages":{}}}
+  </script>
+</div>
+<!-- rnb-frame-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucnNkX2RmMiA8LSB0aWR5cjo6cGl2b3RfbG9uZ2VyKHJzZF9kZiwgLW1vZGVsbm8sIG5hbWVzX3RvID0gXCJ0eXBlXCIsIHZhbHVlc190byA9IFwidmFsdWVcIilcbmdncGxvdChyc2RfZGYyLCBhZXMoeCA9IG1vZGVsbm8sIHkgPSB2YWx1ZSwgY29sb3IgPSB0eXBlLCBncm91cCA9IHR5cGUpKSArXG4gIGdlb21fcG9pbnQoKSArXG4gIGdlb21fbGluZSgpICtcbiAgeGxhYihcIm1vZGVsbm9cIikgK1xuICB5bGFiKFwic2lnbWFcIikgK1xuICBzY2FsZV9jb2xvcl9tYW51YWwobGFiZWxzID0gYyhcInBjclwiLCBcImxtXCIpXG4gICAgICAgICAgICAgICAgICAgICAsdmFsdWVzID0gYyhcImJsdWVcIiwgXCJyZWRcIikpICtcbiAgdGhlbWUobGVnZW5kLnRpdGxlID0gXCJ0eXBlXCIsIFxuICAgICAgICBsZWdlbmQucG9zaXRpb24gPSBjKDAuODUsIDAuNSksXG4gICAgICAgIGxlZ2VuZC5iYWNrZ3JvdW5kID0gZWxlbWVudF9yZWN0KGZpbGwgPSBcIndoaXRlXCIsIGNvbG9yID0gXCJibGFja1wiKSlcbmBgYCJ9 -->
+<pre class="r"><code>rsd_df2 &lt;- tidyr::pivot_longer(rsd_df, -modelno, names_to = &quot;type&quot;, values_to = &quot;value&quot;)
+ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
+  geom_point() +
+  geom_line() +
+  xlab(&quot;modelno&quot;) +
+  ylab(&quot;sigma&quot;) +
+  scale_color_manual(labels = c(&quot;pcr&quot;, &quot;lm&quot;)
+                     ,values = c(&quot;blue&quot;, &quot;red&quot;)) +
+  theme(legend.title = &quot;type&quot;, 
+        legend.position = c(0.85, 0.5),
+        legend.background = element_rect(fill = &quot;white&quot;, color = &quot;black&quot;))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6XG4hIFRoZW1lIGVsZW1lbnQgYGxlZ2VuZC50aXRsZWAgbXVzdCBiZSBhbiBvYmplY3Qgb2YgdHlwZSBgZWxlbWVudF90ZXh0YC5cbkJhY2t0cmFjZTpcbiAxLiBiYXNlIChsb2NhbCkgYDxmbj5gKHgpXG4gMi4gZ2dwbG90Mjo6OnByaW50LmdncGxvdCh4KVxuIDQuIGdncGxvdDI6OjpnZ3Bsb3RfZ3RhYmxlLmdncGxvdF9idWlsdChkYXRhKVxuIDUuIGdncGxvdDI6OjpwbG90X3RoZW1lKHBsb3QpXG4gNi4gYmFzZTo6bWFwcGx5KHZhbGlkYXRlX2VsZW1lbnQsIHRoZW1lLCBuYW1lcyh0aGVtZSksIE1vcmVBcmdzID0gbGlzdChlbGVtZW50X3RyZWUgPSBnZXRfZWxlbWVudF90cmVlKCkpKVxuIDcuIGdncGxvdDIgKGxvY2FsKSBgPGZuPmAoZG90c1tbMUxdXVtbNTJMXV0sIGRvdHNbWzJMXV1bWzUyTF1dLCBlbGVtZW50X3RyZWUgPSBgPG5hbWVkIGxpc3Q+YClcbiJ9 -->
+<pre><code>Error:
+! Theme element `legend.title` must be an object of type `element_text`.
+Backtrace:
+ 1. base (local) `&lt;fn&gt;`(x)
+ 2. ggplot2:::print.ggplot(x)
+ 4. ggplot2:::ggplot_gtable.ggplot_built(data)
+ 5. ggplot2:::plot_theme(plot)
+ 6. base::mapply(validate_element, theme, names(theme), MoreArgs = list(element_tree = get_element_tree()))
+ 7. ggplot2 (local) `&lt;fn&gt;`(dots[[1L]][[52L]], dots[[2L]][[52L]], element_tree = `&lt;named list&gt;`)</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-plot-begin eyJoZWlnaHQiOjQzMi42MzI5LCJ3aWR0aCI6NzAwLCJzaXplX2JlaGF2aW9yIjowLCJjb25kaXRpb25zIjpbXX0= -->
+<p><img src="data:image/png;base64,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jT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQhp0znAAAaVklEQVQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAECBAgQiAoYeKOPE5sAAQIECBAgQIAAAQIECBAgQIAAAQIGXh0gQIAAAQIECBAgQIAAAQIECBAgQIBAVMDAG32c2AQIECBAgAABAgQIECBAgAABAgQIEDDw6gABAgQIECBAgAABAgQIECBAgAABAgSiAgbe6OPEJkCAAAECBAgQIECAAAECBAgQIECAgIFXBwgQIECAAAECBAgQIECAAAECBAgQIBAVMPBGHyc2AQIECBAgQIAAAQIECBAgQIAAAQIEDLw6QIAAAQIECBAgQIAAAQIECBAgQIAAgaiAgTf6OLEJECBAgAABAgQIECBAgAABAgQIECBg4NUBAgQIECBAgAABAgQIECBAgAABAgQIRAUMvNHHiU2AAAECBAgQIECAAAECBAgQIECAAAEDrw4QIECAAAECBAgQIECAAAECBAgQIEAgKmDgjT5ObAIECBAgQIAAAQIECBAgQIAAAQIECBh4dYAAAQIECBAgQIAAAQIECBAgQIAAAQJRAQNv9HFiEyBAgAABAgQIECBAgAABAgQIECBAwMCrAwQIECBAgAABAgQIECBAgAABAgQIEIgKGHijjxObAAECBAgQIECAAAECBAgQIECAAAECBl4dIECAAAECBAgQIECAAAECBAgQIECAQFTAwBt9nNgECBAgQIAAAQIECBAgQIAAAQIECBAw8OoAAQIECBAgQIAAAQIECBAgQIAAAQIEogIG3ujjxCZAgAABAgQIECBAgAABAgQIECBAgICBVwcIECBAgAABAgQIECBAgAABAgQIECAQFTDwRh8nNgECBAgQIECAAAECBAgQIECAAAECBAy8OkCAAAECBAgQIECAAAECBAgQIECAAIGogIE3+jixCRAgQIAAAQIECBAgQIAAAQIECBAgYODVAQIECBAgQIAAAQIECBAgQIAAAQIECEQFDLzRx4lNgAABAgQIECBAgAABAgQIECBAgAABA68OECBAgAABAgQIECBAgAABAgQIECBAICpg4I0+TmwCBAgQIECAAAECBAgQIECAAAECBAgYeHWAAAECBAgQIECAAAECBAgQIECAAAECUQEDb/RxYhMgQIAAAQIECBAgQIAAAQIECBAgQMDAqwMECBAgQIAAAQIECBAgQIAAAQIECBCIChh4o48TmwABAgQIECBAgAABAgQIECBAgAABAgZeHSBAgAABAgQIECBAgAABAgQIECBAgEBUwMAbfZzYBAgQIECAAAECBAgQIECAAAECBAgQMPDqAAECBAgQIECAAAECBAgQIECAAAECBKICBt7o48QmQIAAAQIECBAgQIAAAQIECBAgQICAgVcHCBAgQIAAAQIECBAgQIAAAQIECBAgEBUw8EYfJzYBAgQIECBAgAABAgQIECBAgAABAgQMvDpAgAABAgQIECBAgAABAgQIECBAgACBqICBN/o4sQkQIECAAAECBAgQIECAAAECBAgQIGDg1QECBAgQIECAAAECBAgQIECAAAECBAhEBQy80ceJTYAAAQIECBAgQIAAAQIECBAgQIAAAQOvDhAgQIAAAQIECBAgQIAAAQIECBAgQCAqYOCNPk5sAgQIECBAgAABAgQIECBAgAABAgQIGHh1gAABAgQIECBAgAABAgQIECBAgAABAlEBA2/0cWITIECAAAECBAgQIECAAAECBAgQIEDAwKsDBAgQIECAAAECBAgQIECAAAEC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" /></p>
+<!-- rnb-plot-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 </div>
 <div id="d-explain-why-you-do-not-require-to-a-variable-selection-method-when-selecting-the-predictors-in-pcr." class="section level3">
 <h3>(d) Explain why you do not require to a variable selection method
@@ -2392,41 +2865,128 @@ cultivar12 data?</h4>
 <h2>Consider the Boston Housing data which are available from</h2>
 <p>library ( MASS ) Boston attach ( Boston ) In Lab 5 we used these data
 with the 11 variables shown in Table 7.3 of Chapter 7.</p>
-</div>
-<div id="a-use-the-split-of-the-11-variables-as-in-q3-of-lab-5.-calculate-canonical-correlation-scores.-list-the-strength-of-the-four-correlations-and-show-the-four-cc-score-plots-corresponding-to-uj-vj-for-j-1-.-.-.-4." class="section level2">
-<h2>(a) Use the split of the 11 variables as in Q3 of Lab 5. Calculate
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXR0YWNoKEJvc3RvbilcbkJvc3RvblxuYGBgIn0= -->
+<pre class="r"><code>attach(Boston)
+Boston</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol style="list-style-type: lower-alpha">
+<li>Use the split of the 11 variables as in Q3 of Lab 5. Calculate
 canonical correlation scores. List the strength of the four correlations
 and show the four CC score plots corresponding to
-(U•<sup><sub>j</sub></sup>, V•<sub>j</sub> ) for j = 1, . . . , 4.</h2>
-</div>
-<div id="b-comment-on-the-plots-and-anything-unusual-you-notice." class="section level2">
-<h2>(b) Comment on the plots and anything unusual you notice.</h2>
-</div>
-<div id="c-use-all-variables-of-the-boston-housing-data-other-than-chas-and-add-the-extra-variables-zn-and-lstat-to-the-previous-x2-data-to-increase-these-to-6-dimensional-data.-use-the-x1-data-of-part-a.-repeat-the-calculations-and-graphics-of-part-a-for-these-data." class="section level2">
-<h2>(c) Use all variables of the Boston Housing data other than chas and
+(U•<sup><sub>j</sub></sup>, V•<sub>j</sub> ) for j = 1, . . . , 4.</li>
+</ol>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQm9zdG9uLnJlYXJyYW5nZWQgPC0gQm9zdG9uICU+JSBkcGx5cjo6c2VsZWN0KFwiY3JpbVwiLCBcImluZHVzXCIsIFwibm94XCIsIFwiZGlzXCIsIFwicmFkXCIsIFwicHRyYXRpb1wiLCBcImJsYWNrXCIsIFwicm1cIiwgXCJhZ2VcIiwgXCJ0YXhcIiwgXCJtZWR2XCIpXG5lbnZzb2NpYWwgPC0gQm9zdG9uLnJlYXJyYW5nZWRbLCAxOjddXG5pbmRpdmlkdWFsIDwtIEJvc3Rvbi5yZWFycmFuZ2VkWywgODoxMV1cblxuYm9zdG9uLkNDIDwtIGNhbmNvcihlbnZzb2NpYWwsIGluZGl2aWR1YWwpXG5cbnByaW50KFwiVGhlIHN0cmVuZ3RoIG9mIHRoZSBmb3VyIGNvcnJlbGF0aW9uczogXCIpXG5wcmludChib3N0b24uQ0MkY29yKVxuXG5mb3IgKGkgaW4gMTo0KSB7XG4gIGVudnNvY2lhbHZhbHMgPC0gYXMubWF0cml4KGVudnNvY2lhbCkgJSolIGFzLm1hdHJpeChib3N0b24uQ0MkeGNvZWZbLCBpXSlcblxuICBpbmRpdmlkdWFsdmFscyA8LSBhcy5tYXRyaXgoaW5kaXZpZHVhbCkgJSolIGFzLm1hdHJpeChib3N0b24uQ0MkeWNvZWZbLCBpXSlcblxuICBwbG90KGVudnNvY2lhbHZhbHMsIGluZGl2aWR1YWx2YWxzKSAgXG59XG5cbmBgYCJ9 -->
+<pre class="r"><code>Boston.rearranged &lt;- Boston %&gt;% dplyr::select(&quot;crim&quot;, &quot;indus&quot;, &quot;nox&quot;, &quot;dis&quot;, &quot;rad&quot;, &quot;ptratio&quot;, &quot;black&quot;, &quot;rm&quot;, &quot;age&quot;, &quot;tax&quot;, &quot;medv&quot;)
+envsocial &lt;- Boston.rearranged[, 1:7]
+individual &lt;- Boston.rearranged[, 8:11]
+
+boston.CC &lt;- cancor(envsocial, individual)
+
+print(&quot;The strength of the four correlations: &quot;)
+print(boston.CC$cor)
+
+for (i in 1:4) {
+  envsocialvals &lt;- as.matrix(envsocial) %*% as.matrix(boston.CC$xcoef[, i])
+
+  individualvals &lt;- as.matrix(individual) %*% as.matrix(boston.CC$ycoef[, i])
+
+  plot(envsocialvals, individualvals)  
+}
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Comment on the plots and anything unusual you notice.</li>
+</ol>
+<p>The first CC score plot has the unusual property that the data splits
+into two separate clusters.<br />
+The second and third CC score plots don’t exhibit any interesting
+behavior.<br />
+The fourth CC score plot shows very little correlation.s</p>
+<p>c. Use all variables of the Boston Housing data other than chas and
 add the extra variables zn and lstat to the previous X<sup>[2]</sup>
 data to increase these to 6-dimensional data. Use the X<sup>[1]</sup>
 data of part (a). Repeat the calculations and graphics of part (a) for
-these data.</h2>
-</div>
-<div id="d-compare-the-results-of-parts-a-and-c-and-comment-on-thedifferences-and-why-they-could-occur." class="section level2">
-<h2>(d) Compare the results of parts (a) and (c) and comment on
-thedifferences and why they could occur.</h2>
-</div>
-<div id="e-carry-out-a-hypothesis-test-for-the-data-described-in-part-c-using-the-statistic-tk-of-lecture-5-and-the-values-of-the-correlation-strengths-obtained-in-part-c.-calculate-the-p-values-for-each-statistic-and-report-these-p-values." class="section level2">
-<h2>(e) Carry out a hypothesis test for the data described in part (c)
+these data.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQm9zdG9uLnJlYXJyYW5nZWQgPC0gQm9zdG9uICU+JSBkcGx5cjo6c2VsZWN0KFwiY3JpbVwiLCBcImluZHVzXCIsIFwibm94XCIsIFwiZGlzXCIsIFwicmFkXCIsIFwicHRyYXRpb1wiLCBcImJsYWNrXCIsIFwicm1cIiwgXCJhZ2VcIiwgXCJ0YXhcIiwgXCJtZWR2XCIsIFwiem5cIiwgXCJsc3RhdFwiKVxuZW52c29jaWFsIDwtIEJvc3Rvbi5yZWFycmFuZ2VkWywgMTo3XVxuaW5kaXZpZHVhbCA8LSBCb3N0b24ucmVhcnJhbmdlZFssIDg6MTNdXG5cbmJvc3Rvbi5DQyA8LSBjYW5jb3IoZW52c29jaWFsLCBpbmRpdmlkdWFsKVxuXG5wcmludChcIlRoZSBzdHJlbmd0aCBvZiB0aGUgZm91ciBjb3JyZWxhdGlvbnM6IFwiKVxucHJpbnQoYm9zdG9uLkNDJGNvcilcblxuZm9yIChpIGluIDE6Nikge1xuICBlbnZzb2NpYWx2YWxzIDwtIGFzLm1hdHJpeChlbnZzb2NpYWwpICUqJSBhcy5tYXRyaXgoYm9zdG9uLkNDJHhjb2VmWywgaV0pXG5cbiAgaW5kaXZpZHVhbHZhbHMgPC0gYXMubWF0cml4KGluZGl2aWR1YWwpICUqJSBhcy5tYXRyaXgoYm9zdG9uLkNDJHljb2VmWywgaV0pXG5cbiAgcGxvdChlbnZzb2NpYWx2YWxzLCBpbmRpdmlkdWFsdmFscykgIFxufVxuXG5gYGAifQ== -->
+<pre class="r"><code>Boston.rearranged &lt;- Boston %&gt;% dplyr::select(&quot;crim&quot;, &quot;indus&quot;, &quot;nox&quot;, &quot;dis&quot;, &quot;rad&quot;, &quot;ptratio&quot;, &quot;black&quot;, &quot;rm&quot;, &quot;age&quot;, &quot;tax&quot;, &quot;medv&quot;, &quot;zn&quot;, &quot;lstat&quot;)
+envsocial &lt;- Boston.rearranged[, 1:7]
+individual &lt;- Boston.rearranged[, 8:13]
+
+boston.CC &lt;- cancor(envsocial, individual)
+
+print(&quot;The strength of the four correlations: &quot;)
+print(boston.CC$cor)
+
+for (i in 1:6) {
+  envsocialvals &lt;- as.matrix(envsocial) %*% as.matrix(boston.CC$xcoef[, i])
+
+  individualvals &lt;- as.matrix(individual) %*% as.matrix(boston.CC$ycoef[, i])
+
+  plot(envsocialvals, individualvals)  
+}
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>d. Compare the results of parts (a) and (c) and comment on the
+differences and why they could occur.</p>
+<p>Firstly, the correlation scores are uniformly higher in part (c).
+This is likely because the variance of the additional two variables can
+be used to find correlations in the X1 data.<br />
+<br />
+There are also now 6 total pairs of CC scores. This is possible because
+the rank of the data matrix has increased to 6.</p>
+<p>e. Carry out a hypothesis test for the data described in part (c)
 using the statistic T<sub>k</sub> of Lecture 5 and the values of the
 correlation strengths obtained in part (c). Calculate the p-values for
-each statistic and report these p-values.</h2>
-</div>
-<div id="f-using-a-1-significance-level-make-a-decision-regarding-the-number-of-nonzero-correlation-coefficients-of-the-population-model-based-on-your-results-in-part-e." class="section level2">
-<h2>(f) Using a 1% significance level, make a decision regarding the
+each statistic and report these p-values.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVGsgPC0gZnVuY3Rpb24obiwgZDEsIGQyLCBjb3IsIGspIHtcbiAgY29uc3RhbnQgPC0gbiAtIDAuNSAqIChkMSArIGQyICsgMylcbiAgdGVybXMgPC0gbmEub21pdCgxIC0gY29yW2sgKyAxOmxlbmd0aChjb3IpXV4yKVxuICBsb2d0ZXJtIDwtIGxvZyhwcm9kKHRlcm1zKSlcbiAgcmVzdWx0IDwtIC0gY29uc3RhbnQgKiBsb2d0ZXJtXG4gIHJldHVybihyZXN1bHQpXG59XG5cbm4gPC0gNTA2XG5kMSA8LSA3XG5kMiA8LSA2XG5mb3IgKGsgaW4gMTo1KSB7XG4gIHRrIDwtIFRrKG4sIGQxLCBkMiwgYyhib3N0b24uQ0MkY29yKSwgaylcbiAgZGYgPC0gKGQxIC0gaykgKiAoZDIgLSBrKVxuICBwcmludChwYXN0ZTAoXCJrPVwiICwgaywgXCIgcC12YWx1ZSA9IFwiLCBwY2hpc3EodGssIGRmLCBsb3dlci50YWlsID0gRkFMU0UpKSlcbn1cbmBgYCJ9 -->
+<pre class="r"><code>Tk &lt;- function(n, d1, d2, cor, k) {
+  constant &lt;- n - 0.5 * (d1 + d2 + 3)
+  terms &lt;- na.omit(1 - cor[k + 1:length(cor)]^2)
+  logterm &lt;- log(prod(terms))
+  result &lt;- - constant * logterm
+  return(result)
+}
+
+n &lt;- 506
+d1 &lt;- 7
+d2 &lt;- 6
+for (k in 1:5) {
+  tk &lt;- Tk(n, d1, d2, c(boston.CC$cor), k)
+  df &lt;- (d1 - k) * (d2 - k)
+  print(paste0(&quot;k=&quot; , k, &quot; p-value = &quot;, pchisq(tk, df, lower.tail = FALSE)))
+}</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>f. Using a 1% significance level, make a decision regarding the
 number of nonzero correlation coefficients of the population model based
-on your results in part (e).</h2>
-</div>
-<div id="g-does-the-decision-change-if-you-replace-the-1-significance-level-by-a-5-significance-level-if-yes-how-comment." class="section level2">
-<h2>(g) Does the decision change if you replace the 1% significance
-level by a 5% significance level? If yes, how? Comment.</h2>
+on your results in part (e).</p>
+<p>Looking at the results. At a 1% significance value, we would only
+retain the null hypothesis for k=5.</p>
+<p>The hypothesis test at k=5 is <span class="math inline">\(H_0^5: v_1
+\ne 0, \dots, v_5 \ne 0, v_6 = 0\)</span> vs <span class="math inline">\(H_1^5:v_1 \ne 0, \dots, v_6 \ne 0\)</span>. Since
+we fail to reject the null hypothesis, we assume that the 6th
+correlation coefficient is zero.</p>
+<p>Therefore we conclude that 1,…,5 are nonzero correlation coefficients
+(thus there are 5).</p>
+<p>g. Does the decision change if you replace the 1% significance level
+by a 5% significance level? If yes, how? Comment.</p>
+<p>Yes, it does change. No decisions would be rejected and therefore we
+would assume that there are 6 nonzero correlation coefficients.</p>
 <!-- rnb-text-end -->
 </div>
 </div>
