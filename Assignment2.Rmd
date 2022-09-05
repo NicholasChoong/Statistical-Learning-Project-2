@@ -149,8 +149,8 @@ for (i in 1:4) {
 The first CC score plot has the unusual property that the data splits
 into two separate clusters.\
 The second and third CC score plots don't exhibit any interesting
-behavior. \
-The fourth CC score plot shows very little correlation.
+behavior.\
+The fourth CC score plot shows very little correlation.s
 
 c\. Use all variables of the Boston Housing data other than chas and add
 the extra variables zn and lstat to the previous X^[2]^ data to increase
