@@ -47,17 +47,55 @@ library(factoextra)
 
 ## (a) Why should you not automatically scale the data prior to a PCA or FA? Restrict your answer to one or two concise sentences.
 
-## (b) The dataset ass2pop.csv is available in the LMS folder 'Data sets'. For a description of the data see Assignment 1. Here we work with a part of the dataset only.
+Scaling can possibly cause information loss especially for variables
+with high magnitude. If the variables with high magnitude are important,
+scaling is not advised since scaling centres all the variables and
+transforms their variability and range to more comparable ranges.
+Moreover, if the variables in the data set have same units of
+measurement, scaling is not necessarily required.
 
-Let Σ be the covariance matrix consisting of rows 1:11, and columns
-3:13. Read the data into R. The value for Σ[1, 1] should be 0.8266. In
-your answer show the R commands you use to calculate the following and
-show the results stating clearly what each part is.
+## (b) The dataset ass2pop.csv is available in the LMS folder 'Data sets'. For a description of the data see Assignment 1. Here we work with a part of the dataset only. Let Σ be the covariance matrix consisting of rows 1:11, and columns 3:13. Read the data into R. The value for Σ[1, 1] should be 0.8266. In your answer show the R commands you use to calculate the following and show the results stating clearly what each part is.
+
+```{r}
+ass2pop <- read.csv("ass2pop.csv", header = FALSE)
+S0 = as.matrix(ass2pop[1:11,3:13])
+S0
+```
+
+The covariance matrix is a 11x11 square matrix giving the covariance
+between each pair of the first 11 variables from the first population.
 
 ### i. the eigenvalues of Σ;
 
-ii. the matrix Σ^2/3^;
-iii. the matrix 2Σ^−1/4^ΣΣ^−1/4^ and its eigenvalues
+```{r}
+ev = eigen(S0)
+vals = ev$values
+vals
+```
+
+The eigenvalues of the covariance matrix encode the variability of the
+data in an orthogonal basis that captures as much of the data's
+variability as possible.
+
+### ii. the matrix Σ^2/3^;
+
+```{r}
+V1 = ev$vectors
+vals2 = diag(vals^(2/3) )
+S1 = V1 %*% vals2 %*% t( V1 )
+S1
+```
+
+### iii. the matrix 2Σ^−1/4^ΣΣ^−1/4^ and its eigenvalues
+
+```{r}
+vals3 = diag(vals^(-1/4) )
+S2 = V1 %*% vals3 %*% t( V1 )
+mat = 2*S2%*%S0%*%S2
+mat
+vals4 = eigen(mat)$values
+vals4
+```
 
 # Question 2
 
@@ -77,17 +115,54 @@ iii. the matrix 2Σ^−1/4^ΣΣ^−1/4^ and its eigenvalues
 
 ## We consider the 13-dimensional wine recognition data of Example 4.6 and Lab 4. The data are available in the Data Sets folder. Here we want to compare a factor analysis of all observations with those obtained from cultivar 1 and cultivar 2. The cultivar membership of the observations is given in column 1 of the data set. For part of this analysis you may report the relevant results obtained in the lab. You may find it useful to create two data frames: one for the complete data and a separate one for the first two cultivars of the data. We refer to the latter as the *cultivar12* data. Hint. use the R command factanal from the stats library.
 
-## (a) Scale the data and work with the scaled data. How many
+```{r}
+cultivar = read.table(file = 'wine.tsv', sep = ',')
 
-observations are in the cultivar12 data?
+cultivar12 = cultivar[cultivar$V1 != 3, 2:14]
+cultivar12
 
-## (b) Separately for the complete and for the cultivar12 data, carry
+cultivar = cultivar[,2:14]
+cultivar
+```
 
-out, display and report the results of the following:
+## (a) Scale the data and work with the scaled data. How many observations are in the cultivar12 data?
+
+```{r}
+cultivar_scaled = scale(cultivar, center = TRUE)
+cultivar_scaled
+
+cultivar12_scaled = scale(cultivar12, center = TRUE)
+cultivar12_scaled
+```
+
+There are 130 observations in the cultivar12 data.
+
+## (b) Separately for the complete and for the cultivar12 data, carry out, display and report the results of the following:
 
 ### i. Calculate the sample covariance matrix of the scaled data and the eigenvalues of this matrix. What is the value of $\hat{σ}^2$ for k=2? How different are the values of $\hat{σ}^2$ for the complete and the two cultivar12 datasets? Hint. You may use the information Box 6.7 in your calculations.
 
+```{r}
+S1 = cov(cultivar_scaled)
+val1 = eigen(S1)$values
+
+S2 = cov(cultivar12_scaled)
+val2 = eigen(S2)$values
+
+sigma_hat_sq1 = (1/(13-2))*(sum(val1[3:13]))
+sigma_hat_sq2 = (1/(13-2))*(sum(val2[3:13]))
+
+sigma_hat_sq1
+sigma_hat_sq2
+```
+
+The value of $\hat{σ}^2$ for the complete dataset is 0.57897 lower that
+the one for cultivar12 dataset.
+
 ### ii. Calculate and list the factor loadings for the 2-factor principal axis factoring using the value of $\hat{σ}^2$ calculated in the previous part.
+
+```{r}
+
+```
 
 ### iii. Show biplots of the factor loadings.
 
