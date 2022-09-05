@@ -14,8 +14,8 @@ editor_options:
 ---
 
 ```{r, include=FALSE}
-setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/STAT3064/Data Sets")
-#setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
+#setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/STAT3064/Data Sets")
+setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
 
 rm(list = ls())
 
@@ -143,6 +143,7 @@ row1 <- data.frame(modelno = 1, variable = "Shell_weight", sigma = glance(lm(fm.
 glancerows <- rbind(glancerows, row1)
 add1(fm.fwd, big.lm, test = "F")
 ```
+
 ```{r}
 fm.fwd <- update(fm.fwd, . ~ . + Shucked_weight)
 row1 <- data.frame(modelno = 2, variable = "Shucked_weight", sigma = glance(lm(fm.fwd))$sigma)
@@ -156,6 +157,7 @@ row1 <- data.frame(modelno = 3, variable = "Length", sigma = glance(lm(fm.fwd))$
 glancerows <- rbind(glancerows, row1)
 add1(fm.fwd, big.lm, test = "F")
 ```
+
 ```{r}
 fm.fwd <- update(fm.fwd, . ~ . + Whole_weight)
 row1 <- data.frame(modelno = 4, variable = "Whole_weight", sigma = glance(lm(fm.fwd))$sigma)
@@ -180,7 +182,8 @@ glancerows <- rbind(glancerows, row1)
 glancerows
 ```
 
-Shell_weight, Shucked_weight, Length, Whole_weight, Height, Viscera_weight
+Shell_weight, Shucked_weight, Length, Whole_weight, Height,
+Viscera_weight
 
 ### (b) Carry out PCR on the raw data using the same variables and response as in part (a). For each additional principal component you add to the regression model as predictor, calculate the residual standard deviation and list which of the variables has the heighest absolute weight in the respective principal component.
 
@@ -200,7 +203,6 @@ summary(pcr_model6)
 pcr_model7 <- pcr(Rings ~ Shell_weight + Shucked_weight + Length + Whole_weight + Height + Viscera_weight, data = abalone, scale = F, validation = "CV")
 summary(pcr_model7)
 ```
-
 
 ### (c) In a single graph show plots of residual standard deviation resulting from your models on the y -axis against the number of variables/PC components on the x-axis.
 
@@ -224,7 +226,6 @@ ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
   theme(legend.position = c(0.85, 0.5),
         legend.background = element_rect(fill = "white", color = "black"))
 ```
-
 
 ### (d) Explain why you do not require to a variable selection method when selecting the predictors in PCR.
 
@@ -263,9 +264,11 @@ There are 130 observations in the cultivar12 data.
 ```{r}
 S1 = cov(cultivar_scaled)
 val1 = eigen(S1)$values
+val1
 
 S2 = cov(cultivar12_scaled)
 val2 = eigen(S2)$values
+val2
 
 sigma_hat_sq1 = (1/(13-2))*(sum(val1[3:13]))
 sigma_hat_sq2 = (1/(13-2))*(sum(val2[3:13]))
@@ -280,16 +283,65 @@ the one for cultivar12 dataset.
 ### ii. Calculate and list the factor loadings for the 2-factor principal axis factoring using the value of $\hat{σ}^2$ calculated in the previous part.
 
 ```{r}
+# Factor loading for complete cultivar dataset
+Om1 = diag( rep( sigma_hat_sq1, 13 ) ) 
+S_A1 = S1 - Om1
+
+eig_A1 = eigen( S_A1 )
+
+Gamma_hat_1 = eig_A1$vectors[ ,1:2]
+Lambda_hat_1 =  diag( eig_A1$values[1:2]^(1/2) )
+Ahat1 = Gamma_hat_1 %*% Lambda_hat_1  
+Ahat1
+
+# Factor loading for cultivar12 datasets
+Om2 = diag( rep( sigma_hat_sq2, 13 ) ) 
+S_A2 = S2 - Om2
+
+eig_A2 = eigen( S_A2 )
+
+Gamma_hat_2 = eig_A2$vectors[ ,1:2]
+Lambda_hat_2 =  diag( eig_A2$values[1:2]^(1/2) )
+Ahat2 = Gamma_hat_2%*% Lambda_hat_2 
+Ahat2
 
 ```
 
 ### iii. Show biplots of the factor loadings.
 
+```{r}
+wine_pr1 <- prcomp(cultivar_scaled, scale = F)
+wine_pr2 <- prcomp(cultivar12_scaled, scale = F)
+
+biplot( wine_pr1$x, Ahat1, col = c("white", "blue") )
+biplot( wine_pr2$x, Ahat2, col = c("white", "blue") )
+```
+
 ### iv. Compare the results obtained from the complete data and the cultivar12 data and comment on the main differences, similarities etc.
+
+The eigenvalues of complete data and cultivar12 data are very similar.
+Hence, the values of $\hat{σ}^2$ for both data are very similar as
+$\hat{σ}^2$ is calculated based on the eigenvalues.
+The eigenvectors and the factor loadings for the complete data and
+cultivar12 data are quite different. The factor loadings for both
+dataset differ in terms of absolute value, relative order by
+size and the sign. This difference can also be seen in the biplots where
+the variables are grouped differently and have different angles.
 
 ## (c) We next turn to ML factor loadings and testing. In your calculations use the option "none" for rotation. If you use other commands, you may not achieve full marks for this question. Separately for the complete and for the cultivar12 data, carry out, display and report the results of the following:
 
 ### i. Calculate the factor loadings for the 2-factor ML without rotation. List your factor loadings and show biplots of the factor loadings.
+
+```{r}
+fa1 = factanal(cultivar_scaled, factors = 2, rotation = "none")$loadings
+fa2 = factanal(cultivar12_scaled, factors = 2, rotation = "none")$loadings
+
+fa1
+fa2
+
+biplot( wine_pr1$x, fa1, col = c("white", "blue") )
+biplot( wine_pr1$x, fa2, col = c("white", "blue") )
+```
 
 ### ii. Carry out a sequence of hypothesis tests starting with the one-factor model.
 
