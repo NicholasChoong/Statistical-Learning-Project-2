@@ -14,7 +14,7 @@ editor_options:
 ---
 
 ```{r, include=FALSE}
-#setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/Data Sets")
+setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/STAT3064/Data Sets")
 #setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
 
 rm(list = ls())
@@ -41,6 +41,8 @@ library(scales)
 library(ggpubr)
 library(dplyr)
 library(factoextra)
+library(broom)
+library(pls)
 ```
 
 # Question 1
@@ -63,11 +65,128 @@ iii. the matrix 2Σ^−1/4^ΣΣ^−1/4^ and its eigenvalues
 
 ## Consider the abalone data. We want to compare the performance of linear regression and PCR for the raw abalone data following the description given in Q3 of Lab 3. In the analysis we use the predictor variables Length, Height, Whole Weight, Shucked Weight, Viscera Weight and Dried-Shell Weight and we consider Rings as the response variable. Hint. Note the change of predictor variables used in Q2 compared to the variables in the Lab.
 
+```{r}
+coln <- c(
+  "Sex", # 		nominal			M, F, and I (infant)
+  "Length", # 		continuous	mm	Longest shell measurement
+  "Diameter", # 	continuous	mm	perpendicular to length
+  "Height", # 		continuous	mm	with meat in shell
+  "Whole_weight", # 	continuous	grams	whole abalone
+  "Shucked_weight", # 	continuous	grams	weight of meat
+  "Viscera_weight", # 	continuous	grams	gut weight (after bleeding)
+  "Shell_weight", # 	continuous	grams	after being dried
+  "Rings" # 		integer			+1.5 gives the age in years
+)
+abalone <- read_csv(file = "./abalone.csv", col_names = coln)
+summary(abalone)
+summary
+```
+
+```{r}
+# Regression
+big.lm <- lm(Rings ~ Length + Height + Whole_weight + Shucked_weight + Viscera_weight + Shell_weight, data = abalone)
+summary(big.lm)
+```
+
 ### (a) For the regular linear regression use forward selection and state the order in which the variables are chosen. Calculate the residual standard deviation for each number of predictors. Hint. you may make use of the code in Lab 3.
+
+```{r}
+glancerows <- data.frame()
+fm.fwd <- fm.null <- lm(Rings ~ 1, abalone)
+summary(lm(fm.fwd))
+row1 <- data.frame(modelno = 0, variable = "Intercept", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Shell_weight)
+row1 <- data.frame(modelno = 1, variable = "Shell_weight", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Shucked_weight)
+row1 <- data.frame(modelno = 2, variable = "Shucked_weight", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Length)
+row1 <- data.frame(modelno = 3, variable = "Length", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Whole_weight)
+row1 <- data.frame(modelno = 4, variable = "Whole_weight", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Height)
+row1 <- data.frame(modelno = 5, variable = "Height", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+add1(fm.fwd, big.lm, test = "F")
+```
+
+```{r}
+fm.fwd <- update(fm.fwd, . ~ . + Viscera_weight)
+row1 <- data.frame(modelno = 6, variable = "Viscera_weight", sigma = glance(lm(fm.fwd))$sigma)
+glancerows <- rbind(glancerows, row1)
+```
+
+```{r}
+glancerows
+```
+
+Shell_weight, Shucked_weight, Length, Whole_weight, Height, Viscera_weight
 
 ### (b) Carry out PCR on the raw data using the same variables and response as in part (a). For each additional principal component you add to the regression model as predictor, calculate the residual standard deviation and list which of the variables has the heighest absolute weight in the respective principal component.
 
+```{r}
+pcr_model1 <- pcr(Rings ~ Whole_weight, data = abalone, scale = F, validation = "CV")
+summary(pcr_model1)
+pcr_model2 <- pcr(Rings ~ Whole_weight + Shucked_weight, data = abalone, scale = F, validation = "CV")
+summary(pcr_model2)
+pcr_model3 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length, data = abalone, scale = F, validation = "CV")
+summary(pcr_model3)
+pcr_model4 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight, data = abalone, scale = F, validation = "CV")
+summary(pcr_model4)
+pcr_model5 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight + Height, data = abalone, scale = F, validation = "CV")
+summary(pcr_model5)
+pcr_model6 <- pcr(Rings ~ Whole_weight + Shucked_weight + Length + Shell_weight + Height + Viscera_weight, data = abalone, scale = F, validation = "CV")
+summary(pcr_model6)
+pcr_model7 <- pcr(Rings ~ Shell_weight + Shucked_weight + Length + Whole_weight + Height + Viscera_weight, data = abalone, scale = F, validation = "CV")
+summary(pcr_model7)
+```
+
+
 ### (c) In a single graph show plots of residual standard deviation resulting from your models on the y -axis against the number of variables/PC components on the x-axis.
+
+```{r}
+rsd_df <- data.frame(RMSEP(pcr_model6)$val[1,,])
+colnames(rsd_df) <- c("pcr")
+rsd_df$modelno <- glancerows$modelno
+rsd_df$lm <- glancerows$sigma
+rsd_df
+```
+
+```{r}
+rsd_df2 <- tidyr::pivot_longer(rsd_df, -modelno, names_to = "type", values_to = "value")
+ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
+  geom_point() +
+  geom_line() +
+  xlab("modelno") +
+  ylab("sigma") +
+  scale_color_manual(labels = c("pcr", "lm")
+                     ,values = c("blue", "red")) +
+  theme(legend.position = c(0.85, 0.5),
+        legend.background = element_rect(fill = "white", color = "black"))
+```
+
 
 ### (d) Explain why you do not require to a variable selection method when selecting the predictors in PCR.
 
