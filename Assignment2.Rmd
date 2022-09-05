@@ -8,6 +8,9 @@ output:
   pdf_document: default
   html_notebook: default
   word_document: default
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
 ```{r, include=FALSE}
@@ -44,32 +47,49 @@ library(factoextra)
 
 ## (a) Why should you not automatically scale the data prior to a PCA or FA? Restrict your answer to one or two concise sentences.
 
-## (b) The dataset ass2pop.csv is available in the LMS folder \'Data sets\'. For a description of the data see Assignment 1. Here we work with a part of the dataset only.
-Let Σ be the covariance matrix consisting of rows 1:11, and columns 3:13. Read the data into R. The value for Σ[1, 1] should be 0.8266. In your answer show the R commands you use to calculate the following and show the results stating
-clearly what each part is.
+## (b) The dataset ass2pop.csv is available in the LMS folder 'Data sets'. For a description of the data see Assignment 1. Here we work with a part of the dataset only.
+
+Let Σ be the covariance matrix consisting of rows 1:11, and columns
+3:13. Read the data into R. The value for Σ[1, 1] should be 0.8266. In
+your answer show the R commands you use to calculate the following and
+show the results stating clearly what each part is.
 
 ### i. the eigenvalues of Σ;
+
 ii. the matrix Σ^2/3^;
 iii. the matrix 2Σ^−1/4^ΣΣ^−1/4^ and its eigenvalues
 
 # Question 2
 
 ## Consider the abalone data. We want to compare the performance of linear regression and PCR for the raw abalone data following the description given in Q3 of Lab 3. In the analysis we use the predictor variables Length, Height, Whole Weight, Shucked Weight, Viscera Weight and Dried-Shell Weight and we consider Rings as the response variable. Hint. Note the change of predictor variables used in Q2 compared to the
+
 variables in the Lab.
 
 ## (a) For the regular linear regression use forward selection and state the order in which the variables are chosen. Calculate the residual standard deviation for each number of predictors. Hint. you may make use of the code in Lab 3.
 
 ## 
-(b) Carry out PCR on the raw data using the same variables and response as in part (a). For each additional principal component you add to the regression model as predictor, calculate the residual standard deviation and list which of the variables has the heighest absolute weight in the respective principal component.
+
+(b) Carry out PCR on the raw data using the same variables and response
+    as in part (a). For each additional principal component you add to
+    the regression model as predictor, calculate the residual standard
+    deviation and list which of the variables has the heighest absolute
+    weight in the respective principal component.
 
 ## 
-(c) In a single graph show plots of residual standard deviation resulting from your models on the y -axis against the number of variables/PC components on the x-axis.
+
+(c) In a single graph show plots of residual standard deviation
+    resulting from your models on the y -axis against the number of
+    variables/PC components on the x-axis.
 
 ## 
-(d) Explain why you do not require to a variable selection method when selecting the predictors in PCR.
+
+(d) Explain why you do not require to a variable selection method when
+    selecting the predictors in PCR.
 
 ## 
-(e) Comment on your findings and in particular on what approaches work better for these data and why.
+
+(e) Comment on your findings and in particular on what approaches work
+    better for these data and why.
 
 # Question 3
 
@@ -77,74 +97,191 @@ variables in the Lab.
 
 ## 
 
-(a) Scale the data and work with the scaled data. How many observations are in the
-cultivar12 data?
+(a) Scale the data and work with the scaled data. How many observations
+    are in the cultivar12 data?
 
 ## 
-(b) Separately for the complete and for the cultivar12 data, carry out, display and report the results of the following:
+
+(b) Separately for the complete and for the cultivar12 data, carry out,
+    display and report the results of the following:
 
 ### 
-i. Calculate the sample covariance matrix of the scaled data and the eigenvalues of this matrix. What is the value of $\hat{σ}^2$ for k=2? How different are the values of $\hat{σ}^2$ for the complete and the two cultivar12 datasets?
-Hint. You may use the information Box 6.7 in your calculations.
+
+i.  Calculate the sample covariance matrix of the scaled data and the
+    eigenvalues of this matrix. What is the value of $\hat{σ}^2$ for
+    k=2? How different are the values of $\hat{σ}^2$ for the complete
+    and the two cultivar12 datasets? Hint. You may use the information
+    Box 6.7 in your calculations.
 
 ### 
-ii. Calculate and list the factor loadings for the 2-factor principal axis factoring using the value of $\hat{σ}^2$ calculated in the previous part.
+
+ii. Calculate and list the factor loadings for the 2-factor principal
+    axis factoring using the value of $\hat{σ}^2$ calculated in the
+    previous part.
 
 ### 
+
 iii. Show biplots of the factor loadings.
-iv. Compare the results obtained from the complete data and the cultivar12 data and comment on the main differences, similarities etc.
+iv. Compare the results obtained from the complete data and the
+    cultivar12 data and comment on the main differences, similarities
+    etc.
 
-## (c) We next turn to ML factor loadings and testing. In your calculations use the option \"none\" for rotation. If you use other commands, you may not achieve full marks for this question.
-Separately for the complete and for the cultivar12 data, carry out, display and report the results of the following:
+## (c) We next turn to ML factor loadings and testing. In your calculations use the option "none" for rotation. If you use other commands, you may not achieve full marks for this question.
 
-### 
-i. Calculate the factor loadings for the 2-factor ML without rotation. List your factor loadings and show biplots of the factor loadings.
-
-### 
-ii. Carry out a sequence of hypothesis tests starting with the one-factor model.
-
-#### 
-A. What is the largest number $\hat{σ}^2$ of factors you can test with these data? Why can we not exceed this number?
-
-#### 
-B. For each k ≤ k^~max~^ , state the number of degrees of freedom of the χ^2^ distribution, the limiting distribution of the test statistic −2 log LR~k~ , and report the p-value for each set of tests.
-
-#### 
-C. What is the appropriate k-factor model for the complete and cultivar12 data?
+Separately for the complete and for the cultivar12 data, carry out,
+display and report the results of the following:
 
 ### 
+
+i.  Calculate the factor loadings for the 2-factor ML without rotation.
+    List your factor loadings and show biplots of the factor loadings.
+
+### 
+
+ii. Carry out a sequence of hypothesis tests starting with the
+    one-factor model.
+
+#### 
+
+A. What is the largest number $\hat{σ}^2$ of factors you can test with
+these data? Why can we not exceed this number?
+
+#### 
+
+B. For each k ≤ k^~max~^ , state the number of degrees of freedom of the
+χ^2^ distribution, the limiting distribution of the test statistic −2
+log LR~k~ , and report the p-value for each set of tests.
+
+#### 
+
+C. What is the appropriate k-factor model for the complete and
+cultivar12 data?
+
+### 
+
 iii. Compare the results of parts (b) and (c).
 
 # Question 4
 
 ## Consider the Boston Housing data which are available from
-library ( MASS )
+
+library ( MASS ) Boston attach ( Boston ) In Lab 5 we used these data
+with the 11 variables shown in Table 7.3 of Chapter 7.
+
+```{r}
+attach(Boston)
 Boston
-attach ( Boston )
-In Lab 5 we used these data with the 11 variables shown in Table 7.3 of Chapter 7.
+```
 
-## 
-(a) Use the split of the 11 variables as in Q3 of Lab 5. Calculate canonical correlation scores. List the strength of the four correlations and show the four CC score plots corresponding to (U•^~j~^, V•~j~ ) for j = 1, . . . , 4.
+(a) Use the split of the 11 variables as in Q3 of Lab 5. Calculate
+    canonical correlation scores. List the strength of the four
+    correlations and show the four CC score plots corresponding to
+    (U•^~j~^, V•~j~ ) for j = 1, . . . , 4.
 
-## 
+```{r}
+Boston.rearranged <- Boston %>% dplyr::select("crim", "indus", "nox", "dis", "rad", "ptratio", "black", "rm", "age", "tax", "medv")
+envsocial <- Boston.rearranged[, 1:7]
+individual <- Boston.rearranged[, 8:11]
+
+boston.CC <- cancor(envsocial, individual)
+
+print("The strength of the four correlations: ")
+print(boston.CC$cor)
+
+for (i in 1:4) {
+  envsocialvals <- as.matrix(envsocial) %*% as.matrix(boston.CC$xcoef[, i])
+
+  individualvals <- as.matrix(individual) %*% as.matrix(boston.CC$ycoef[, i])
+
+  plot(envsocialvals, individualvals)  
+}
+
+```
+
 (b) Comment on the plots and anything unusual you notice.
 
-## 
-(c) Use all variables of the Boston Housing data other than chas and add the extra variables zn and lstat to the previous X^[2]^ data to increase these to 6-dimensional data. Use the X^[1]^ data of part (a). Repeat the calculations and graphics of part (a) for these data.
+The first CC score plot has the unusual property that the data splits
+into two separate clusters.\
+The second and third CC score plots don't exhibit any interesting
+behavior. \
+The fourth CC score plot shows very little correlation.
 
-## 
-(d) Compare the results of parts (a) and (c) and comment on the differences and why they could occur.
+c\. Use all variables of the Boston Housing data other than chas and add
+the extra variables zn and lstat to the previous X^[2]^ data to increase
+these to 6-dimensional data. Use the X^[1]^ data of part (a). Repeat the
+calculations and graphics of part (a) for these data.
 
-## 
-(e) Carry out a hypothesis test for the data described in part (c) using the statistic T~k~ of Lecture 5 and the values of the correlation strengths obtained in part (c). Calculate the p-values for each statistic and report these p-values.
+```{r}
+Boston.rearranged <- Boston %>% dplyr::select("crim", "indus", "nox", "dis", "rad", "ptratio", "black", "rm", "age", "tax", "medv", "zn", "lstat")
+envsocial <- Boston.rearranged[, 1:7]
+individual <- Boston.rearranged[, 8:13]
 
-## 
-(f) Using a 1% significance level, make a decision regarding the number of nonzero correlation coefficients of the population model based on your results in part (e).
+boston.CC <- cancor(envsocial, individual)
 
-## 
-(g) Does the decision change if you replace the 1% significance level by a 5% significance level? If yes, how? Comment.
+print("The strength of the four correlations: ")
+print(boston.CC$cor)
 
+for (i in 1:6) {
+  envsocialvals <- as.matrix(envsocial) %*% as.matrix(boston.CC$xcoef[, i])
 
+  individualvals <- as.matrix(individual) %*% as.matrix(boston.CC$ycoef[, i])
 
+  plot(envsocialvals, individualvals)  
+}
 
+```
 
+d\. Compare the results of parts (a) and (c) and comment on the
+differences and why they could occur.
+
+Firstly, the correlation scores are uniformly higher in part (c). This
+is likely because the variance of the additional two variables can be
+used to find correlations in the X1 data.\
+\
+There are also now 6 total pairs of CC scores. This is possible because
+the rank of the data matrix has increased to 6.
+
+e\. Carry out a hypothesis test for the data described in part (c) using
+the statistic T~k~ of Lecture 5 and the values of the correlation
+strengths obtained in part (c). Calculate the p-values for each
+statistic and report these p-values.
+
+```{r}
+Tk <- function(n, d1, d2, cor, k) {
+  constant <- n - 0.5 * (d1 + d2 + 3)
+  terms <- na.omit(1 - cor[k + 1:length(cor)]^2)
+  logterm <- log(prod(terms))
+  result <- - constant * logterm
+  return(result)
+}
+
+n <- 506
+d1 <- 7
+d2 <- 6
+for (k in 1:5) {
+  tk <- Tk(n, d1, d2, c(boston.CC$cor), k)
+  df <- (d1 - k) * (d2 - k)
+  print(paste0("k=" , k, " p-value = ", pchisq(tk, df, lower.tail = FALSE)))
+}
+```
+
+f\. Using a 1% significance level, make a decision regarding the number
+of nonzero correlation coefficients of the population model based on
+your results in part (e).
+
+Looking at the results. At a 1% significance value, we would only retain
+the null hypothesis for k=5.
+
+The hypothesis test at k=5 is
+$H_0^5: v_1 \ne 0, \dots, v_5 \ne 0, v_6 = 0$ vs
+$H_1^5:v_1 \ne 0, \dots, v_6 \ne 0$. Since we fail to reject the null
+hypothesis, we assume that the 6th correlation coefficient is zero.
+
+Therefore we conclude that 1,...,5 are nonzero correlation coefficients
+(thus there are 5).
+
+g\. Does the decision change if you replace the 1% significance level by
+a 5% significance level? If yes, how? Comment.
+
+Yes, it does change. No decisions would be rejected and therefore we
+would assume that there are 6 nonzero correlation coefficients.
