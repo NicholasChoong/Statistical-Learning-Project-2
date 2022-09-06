@@ -56,7 +56,7 @@ transforms their variability and range to more comparable ranges.
 Moreover, if the variables in the data set have same units of
 measurement, scaling is not necessarily required.
 
-## (b) The dataset ass2pop.csv is available in the LMS folder 'Data sets'. For a description of the data see Assignment 1. Here we work with a part of the dataset only. Let Σ be the covariance matrix consisting of rows 1:11, and columns 3:13. Read the data into R. The value for Σ[1, 1] should be 0.8266. In your answer show the R commands you use to calculate the following and show the results stating clearly what each part is.
+## (b) The dataset ass2pop.csv is available in the LMS folder 'Data sets'. For a description of the data see Assignment 1. Here we work with a part of the dataset only. Let $\Sigma$ be the covariance matrix consisting of rows 1:11, and columns 3:13. Read the data into R. The value for $\Sigma$[1, 1] should be 0.8266. In your answer show the R commands you use to calculate the following and show the results stating clearly what each part is.
 
 ```{r}
 ass2pop <- read.csv("ass2pop.csv", header = FALSE)
@@ -67,7 +67,7 @@ S0
 The covariance matrix is a 11x11 square matrix giving the covariance
 between each pair of the first 11 variables from the first population.
 
-### i. the eigenvalues of Σ;
+### i. the eigenvalues of $\Sigma$;
 
 ```{r}
 ev <- eigen(S0)
@@ -79,7 +79,7 @@ The eigenvalues of the covariance matrix encode the variability of the
 data in an orthogonal basis that captures as much of the data's
 variability as possible.
 
-### ii. the matrix Σ^2/3^;
+### ii. the matrix \$\\Sigma\$^2/3^;
 
 ```{r}
 V1 <- ev$vectors
@@ -88,7 +88,7 @@ S1 <- V1 %*% vals2 %*% t(V1)
 S1
 ```
 
-### iii. the matrix 2Σ^−1/4^ΣΣ^−1/4^ and its eigenvalues
+### iii. the matrix 2$\Sigma$^-1/4^$\Sigma$$\Sigma$^-1/4^ and its eigenvalues
 
 ```{r}
 vals3 <- diag(vals^(-1 / 4))
@@ -116,6 +116,7 @@ coln <- c(
   "Rings" # 		integer			+1.5 gives the age in years
 )
 abalone <- read_csv(file = "./abalone.csv", col_names = coln)
+abalone$Sex <- as.factor(abalone$Sex)
 summary(abalone)
 summary
 ```
@@ -176,10 +177,13 @@ add1(fm.fwd, big.lm, test = "F")
 fm.fwd <- update(fm.fwd, . ~ . + Viscera_weight)
 row1 <- data.frame(modelno = 6, variable = "Viscera_weight", sigma = glance(lm(fm.fwd))$sigma)
 glancerows <- rbind(glancerows, row1)
+glancerows
 ```
 
 ```{r}
-glancerows
+glancerows1 <- data.frame(modelno = glancerows$modelno, sigma = glancerows$sigma)
+rownames(glancerows1) <- glancerows$variable
+glancerows1
 ```
 
 Shell_weight, Shucked_weight, Length, Whole_weight, Height,
@@ -190,27 +194,57 @@ Viscera_weight
 ```{r}
 abalone1 <- dplyr::select(
   abalone,
-  Rings, Shell_weight, Shucked_weight, Length, Whole_weight, Height, Viscera_weight
+  Rings,
+  Shell_weight,
+  Shucked_weight,
+  Length,
+  Whole_weight,
+  Height,
+  Viscera_weight
 )
 abalone_pr <- prcomp(abalone1, scale = F)
-fviz_contrib(abalone_pr, choice = "var", axes = 5) +
-  ggtitle("Contribution of variables to PC") +
-  ylim(0, 50)
+
+pc2 <- fviz_contrib(abalone_pr, choice = "var", axes = 2) +
+  ggtitle("Contribution of variables to PC2")
+
+pc3 <- fviz_contrib(abalone_pr, choice = "var", axes = 3) +
+  ggtitle("Contribution of variables to PC3")
+
+pc4 <- fviz_contrib(abalone_pr, choice = "var", axes = 4) +
+  ggtitle("Contribution of variables to PC4")
+
+pc5 <- fviz_contrib(abalone_pr, choice = "var", axes = 5) +
+  ggtitle("Contribution of variables to PC5")
+
+pc6 <- fviz_contrib(abalone_pr, choice = "var", axes = 6) +
+  ggtitle("Contribution of variables to PC6")
+
+pc7 <- fviz_contrib(abalone_pr, choice = "var", axes = 7) +
+  ggtitle("Contribution of variables to PC7")
+
+figure <- ggarrange(pc2, pc3, pc4, pc5, pc6, pc7,
+  ncol = 2, nrow = 3
+)
+figure
 ```
 
 ```{r}
-set.seed(3064)
+set.seed(1000)
 pcr_model <- pcr(Rings ~ ., data = abalone1, scale = F, validation = "CV")
 summary(pcr_model)
+```
+
+```{r}
+var_contribution <- c("", "Whole_weight", "Shucked_weight", "Length", "Viscera_weight", "Height", "Viscera_weight")
+pcr_df <- data.frame(var_contribution, RMSEP(pcr_model)$val[1, , ])
+colnames(pcr_df) <- c("variable", "pcr")
+pcr_df
 ```
 
 ### (c) In a single graph show plots of residual standard deviation resulting from your models on the y -axis against the number of variables/PC components on the x-axis.
 
 ```{r}
-rsd_df <- data.frame(RMSEP(pcr_model)$val[1, , ])
-colnames(rsd_df) <- c("pcr")
-rsd_df$modelno <- glancerows$modelno
-rsd_df$lm <- glancerows$sigma
+rsd_df <- data.frame(modelno = glancerows1$modelno, lm = glancerows1$sigma, pcr = pcr_df$pcr)
 rsd_df
 ```
 
@@ -239,7 +273,7 @@ ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
 
 ## We consider the 13-dimensional wine recognition data of Example 4.6 and Lab 4. The data are available in the Data Sets folder. Here we want to compare a factor analysis of all observations with those obtained from cultivar 1 and cultivar 2. The cultivar membership of the observations is given in column 1 of the data set. For part of this analysis you may report the relevant results obtained in the lab. You may find it useful to create two data frames: one for the complete data and a separate one for the first two cultivars of the data. We refer to the latter as the *cultivar12* data. Hint. use the R command factanal from the stats library.
 
-```{r}
+```{r, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 cultivar <- read.table(file = "wine.tsv", sep = ",")
 
 cultivar12 <- cultivar[cultivar$V1 != 3, 2:14]
@@ -251,7 +285,7 @@ cultivar
 
 ## (a) Scale the data and work with the scaled data. How many observations are in the cultivar12 data?
 
-```{r}
+```{r, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 cultivar_scaled <- scale(cultivar, center = TRUE)
 cultivar_scaled
 
@@ -263,7 +297,7 @@ There are 130 observations in the cultivar12 data.
 
 ## (b) Separately for the complete and for the cultivar12 data, carry out, display and report the results of the following:
 
-### i. Calculate the sample covariance matrix of the scaled data and the eigenvalues of this matrix. What is the value of $\hat{σ}^2$ for k=2? How different are the values of $\hat{σ}^2$ for the complete and the two cultivar12 datasets? Hint. You may use the information Box 6.7 in your calculations.
+### i. Calculate the sample covariance matrix of the scaled data and the eigenvalues of this matrix. What is the value of $\hat{\sigma}^2$ for k=2? How different are the values of $\hat{\sigma}^2$ for the complete and the two cultivar12 datasets? Hint. You may use the information Box 6.7 in your calculations.
 
 ```{r}
 S1 <- cov(cultivar_scaled)
@@ -281,10 +315,10 @@ sigma_hat_sq1
 sigma_hat_sq2
 ```
 
-The value of $\hat{σ}^2$ for the complete dataset is 0.57897 lower that
-the one for cultivar12 dataset.
+The value of $\hat{\sigma}^2$ for the complete dataset is 0.57897 lower
+that the one for cultivar12 dataset.
 
-### ii. Calculate and list the factor loadings for the 2-factor principal axis factoring using the value of $\hat{σ}^2$ calculated in the previous part.
+### ii. Calculate and list the factor loadings for the 2-factor principal axis factoring using the value of $\hat{\sigma}^2$ calculated in the previous part.
 
 ```{r}
 # Factor loading for complete cultivar dataset
@@ -323,13 +357,13 @@ biplot(wine_pr2$x, Ahat2, col = c("white", "blue"))
 ### iv. Compare the results obtained from the complete data and the cultivar12 data and comment on the main differences, similarities etc.
 
 The eigenvalues of complete data and cultivar12 data are very similar.
-Hence, the values of $\hat{σ}^2$ for both data are very similar as
-$\hat{σ}^2$ is calculated based on the eigenvalues. The eigenvectors and
-the factor loadings for the complete data and cultivar12 data are quite
-different. The factor loadings for both dataset differ in terms of
-absolute value, relative order by size and the sign. This difference can
-also be seen in the biplots where the variables are grouped differently
-and have different angles.
+Hence, the values of $\hat{\sigma}^2$ for both data are very similar as
+$\hat{\sigma}^2$ is calculated based on the eigenvalues. The
+eigenvectors and the factor loadings for the complete data and
+cultivar12 data are quite different. The factor loadings for both
+dataset differ in terms of absolute value, relative order by size and
+the sign. This difference can also be seen in the biplots where the
+variables are grouped differently and have different angles.
 
 ## (c) We next turn to ML factor loadings and testing. In your calculations use the option "none" for rotation. If you use other commands, you may not achieve full marks for this question. Separately for the complete and for the cultivar12 data, carry out, display and report the results of the following:
 
@@ -348,9 +382,9 @@ biplot(wine_pr1$x, fa2, col = c("white", "blue"))
 
 ### ii. Carry out a sequence of hypothesis tests starting with the one-factor model.
 
-#### A. What is the largest number $\hat{σ}^2$ of factors you can test with these data? Why can we not exceed this number?
+#### A. What is the largest number $\hat{\sigma}^2$ of factors you can test with these data? Why can we not exceed this number?
 
-#### B. For each k ≤ k^~max~^ , state the number of degrees of freedom of the χ^2^ distribution, the limiting distribution of the tes statistic −2 log LR~k~ , and report the p-value for each set of tests.
+#### B. For each $k \le k_{max}$ , state the number of degrees of freedom of the $\chi^2$ distribution, the limiting distribution of the test statistic $-2log LR_k$ , and report the p-value for each set of tests.
 
 #### C. What is the appropriate k-factor model for the complete and cultivar12 data?
 
@@ -363,7 +397,7 @@ biplot(wine_pr1$x, fa2, col = c("white", "blue"))
 library ( MASS ) Boston attach ( Boston ) In Lab 5 we used these data
 with the 11 variables shown in Table 7.3 of Chapter 7.
 
-```{r}
+```{r, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 attach(Boston)
 Boston
 ```
@@ -374,7 +408,19 @@ Boston
     (U•^~j~^, V•~j~ ) for j = 1, . . . , 4.
 
 ```{r}
-Boston.rearranged <- Boston %>% dplyr::select("crim", "indus", "nox", "dis", "rad", "ptratio", "black", "rm", "age", "tax", "medv")
+Boston.rearranged <- Boston %>% dplyr::select(
+  "crim",
+  "indus",
+  "nox",
+  "dis",
+  "rad",
+  "ptratio",
+  "black",
+  "rm",
+  "age",
+  "tax",
+  "medv"
+)
 envsocial <- Boston.rearranged[, 1:7]
 individual <- Boston.rearranged[, 8:11]
 
@@ -400,13 +446,28 @@ The second and third CC score plots don't exhibit any interesting
 behavior.\
 The fourth CC score plot shows very little correlation.s
 
-c\. Use all variables of the Boston Housing data other than chas and add
-the extra variables zn and lstat to the previous X^[2]^ data to increase
-these to 6-dimensional data. Use the X^[1]^ data of part (a). Repeat the
-calculations and graphics of part (a) for these data.
+(c) Use all variables of the Boston Housing data other than chas and add
+    the extra variables zn and lstat to the previous X^[2]^ data to
+    increase these to 6-dimensional data. Use the X^[1]^ data of part
+    (a). Repeat the calculations and graphics of part (a) for these
+    data.
 
 ```{r}
-Boston.rearranged <- Boston %>% dplyr::select("crim", "indus", "nox", "dis", "rad", "ptratio", "black", "rm", "age", "tax", "medv", "zn", "lstat")
+Boston.rearranged <- Boston %>% dplyr::select(
+  "crim",
+  "indus",
+  "nox",
+  "dis",
+  "rad",
+  "ptratio",
+  "black",
+  "rm",
+  "age",
+  "tax",
+  "medv",
+  "zn",
+  "lstat"
+)
 envsocial <- Boston.rearranged[, 1:7]
 individual <- Boston.rearranged[, 8:13]
 
@@ -424,8 +485,8 @@ for (i in 1:6) {
 }
 ```
 
-d\. Compare the results of parts (a) and (c) and comment on the
-differences and why they could occur.
+(d) Compare the results of parts (a) and (c) and comment on the
+    differences and why they could occur.
 
 Firstly, the correlation scores are uniformly higher in part (c). This
 is likely because the variance of the additional two variables can be
@@ -434,10 +495,10 @@ used to find correlations in the X1 data.\
 There are also now 6 total pairs of CC scores. This is possible because
 the rank of the data matrix has increased to 6.
 
-e\. Carry out a hypothesis test for the data described in part (c) using
-the statistic T~k~ of Lecture 5 and the values of the correlation
-strengths obtained in part (c). Calculate the p-values for each
-statistic and report these p-values.
+(e) Carry out a hypothesis test for the data described in part (c) using
+    the statistic T~k~ of Lecture 5 and the values of the correlation
+    strengths obtained in part (c). Calculate the p-values for each
+    statistic and report these p-values.
 
 ```{r}
 Tk <- function(n, d1, d2, cor, k) {
@@ -458,9 +519,9 @@ for (k in 1:5) {
 }
 ```
 
-f\. Using a 1% significance level, make a decision regarding the number
-of nonzero correlation coefficients of the population model based on
-your results in part (e).
+(f) Using a 1% significance level, make a decision regarding the number
+    of nonzero correlation coefficients of the population model based on
+    your results in part (e).
 
 Looking at the results. At a 1% significance value, we would only retain
 the null hypothesis for k=5.
@@ -473,8 +534,8 @@ hypothesis, we assume that the 6th correlation coefficient is zero.
 Therefore we conclude that 1,...,5 are nonzero correlation coefficients
 (thus there are 5).
 
-g\. Does the decision change if you replace the 1% significance level by
-a 5% significance level? If yes, how? Comment.
+(g) Does the decision change if you replace the 1% significance level by
+    a 5% significance level? If yes, how? Comment.
 
 Yes, it does change. No decisions would be rejected and therefore we
 would assume that there are 6 nonzero correlation coefficients.
