@@ -192,7 +192,6 @@ Viscera_weight
 ```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 abalone1 <- dplyr::select(
   abalone,
-  # Rings,
   Shell_weight,
   Shucked_weight,
   Length,
@@ -232,6 +231,12 @@ abalone_lm <- lm(Rings ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6, abalone_lm_tmp)
 row1_pc <- data.frame(modelno = 6, variable = "6 comps", sigma = glance(abalone_lm)$sigma)
 glancerows_pc <- rbind(glancerows_pc, row1_pc)
 ```
+
+```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='show'}
+ggcorr(abalone1, label = T) +
+  ggtitle("Heatmap of Predictor Variables")
+```
+
 
 ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='show'}
 pc1 <- fviz_contrib(abalone_pr, choice = "var", axes = 1) +
@@ -290,9 +295,14 @@ ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
 ```
 
 ### (d) Explain why you do not require to a variable selection method when selecting the predictors in PCR.
-
+PCR does not require us to choose which predictor variables to add to the model since each principal component uses a linear combination of all the predictor variables. Moreover, the principal components are arranged in descending order of variance, so the first principal component always has the largest variance, followed by the second and so on. Hence, a variable selection method is not required as the principal components can just be added to the model in order of their variances.
 
 ### (e) Comment on your findings and in particular on what approaches work better for these data and why.
+Based on the correlation heatmap of the predictor variables, we can see that they are highly collinear. The lines plot above shows that the standard linear regression has a smaller residual standard deviation than the principal component regression when the models with only one variable, but for models with two to four variables, the principal component regression has smaller residual standard deviations than the standard linear regression. As for models with five or more variables, the differences in the residual standard deviations between the two regressions are either small or zero. 
+
+For the standard linear regression, the predictor variables are added to the model using forward stepwise regression with the largest F-value. Stepwise regression might not be suitable as the F-statistics do not have the claimed distribution, and collinearity problems are exacerbated. For the principal component regression, the predictor variables are added to the model based on the variances of the principal components. PCR can perform well even when the predictor variables are highly collinear, as it produces principal components that are orthogonal to each other. 
+
+In conclusion, for this data set, standard linear regression should be used for one variable, and principal component regression should be used for two or more variables.
 
 
 # Question 3
