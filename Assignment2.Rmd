@@ -79,7 +79,7 @@ The eigenvalues of the covariance matrix encode the variability of the
 data in an orthogonal basis that captures as much of the data's
 variability as possible.
 
-### ii. the matrix \$\\Sigma\$^2/3^;
+### ii. the matrix $\Sigma^{2/3}$;
 
 ```{r}
 V1 <- ev$vectors
@@ -88,7 +88,7 @@ S1 <- V1 %*% vals2 %*% t(V1)
 S1
 ```
 
-### iii. the matrix 2$\Sigma$^-1/4^$\Sigma$$\Sigma$^-1/4^ and its eigenvalues
+### iii. the matrix $2\Sigma^{-1/4}$$\Sigma$$\Sigma^{-1/4}$and its eigenvalues
 
 ```{r}
 vals3 <- diag(vals^(-1 / 4))
@@ -103,7 +103,7 @@ vals4
 
 ## Consider the abalone data. We want to compare the performance of linear regression and PCR for the raw abalone data following the description given in Q3 of Lab 3. In the analysis we use the predictor variables Length, Height, Whole Weight, Shucked Weight, Viscera Weight and Dried-Shell Weight and we consider Rings as the response variable. Hint. Note the change of predictor variables used in Q2 compared to the variables in the Lab.
 
-```{r}
+```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 coln <- c(
   "Sex", # 		nominal			M, F, and I (infant)
   "Length", # 		continuous	mm	Longest shell measurement
@@ -118,10 +118,9 @@ coln <- c(
 abalone <- read_csv(file = "./abalone.csv", col_names = coln)
 abalone$Sex <- as.factor(abalone$Sex)
 summary(abalone)
-summary
 ```
 
-```{r}
+```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 # Regression
 big.lm <- lm(Rings ~ Length + Height + Whole_weight + Shucked_weight + Viscera_weight + Shell_weight, data = abalone)
 summary(big.lm)
@@ -129,72 +128,71 @@ summary(big.lm)
 
 ### (a) For the regular linear regression use forward selection and state the order in which the variables are chosen. Calculate the residual standard deviation for each number of predictors. Hint. you may make use of the code in Lab 3.
 
-```{r}
+```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 glancerows <- data.frame()
 fm.fwd <- fm.null <- lm(Rings ~ 1, abalone)
 summary(lm(fm.fwd))
-row1 <- data.frame(modelno = 0, variable = "Intercept", sigma = glance(lm(fm.fwd))$sigma)
+row1 <- data.frame(modelno = 0, variable = "(Intercept)", sigma = glance(lm(fm.fwd))$sigma)
 glancerows <- rbind(glancerows, row1)
 add1(fm.fwd, big.lm, test = "F")
 ```
 
-```{r}
+```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 fm.fwd <- update(fm.fwd, . ~ . + Shell_weight)
 row1 <- data.frame(modelno = 1, variable = "Shell_weight", sigma = glance(lm(fm.fwd))$sigma)
 glancerows <- rbind(glancerows, row1)
 add1(fm.fwd, big.lm, test = "F")
 ```
 
-```{r}
+```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 fm.fwd <- update(fm.fwd, . ~ . + Shucked_weight)
 row1 <- data.frame(modelno = 2, variable = "Shucked_weight", sigma = glance(lm(fm.fwd))$sigma)
 glancerows <- rbind(glancerows, row1)
 add1(fm.fwd, big.lm, test = "F")
 ```
 
-```{r}
+```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 fm.fwd <- update(fm.fwd, . ~ . + Length)
 row1 <- data.frame(modelno = 3, variable = "Length", sigma = glance(lm(fm.fwd))$sigma)
 glancerows <- rbind(glancerows, row1)
 add1(fm.fwd, big.lm, test = "F")
 ```
 
-```{r}
+```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 fm.fwd <- update(fm.fwd, . ~ . + Whole_weight)
 row1 <- data.frame(modelno = 4, variable = "Whole_weight", sigma = glance(lm(fm.fwd))$sigma)
 glancerows <- rbind(glancerows, row1)
 add1(fm.fwd, big.lm, test = "F")
 ```
 
-```{r}
+```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 fm.fwd <- update(fm.fwd, . ~ . + Height)
 row1 <- data.frame(modelno = 5, variable = "Height", sigma = glance(lm(fm.fwd))$sigma)
 glancerows <- rbind(glancerows, row1)
 add1(fm.fwd, big.lm, test = "F")
 ```
 
-```{r}
+```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 fm.fwd <- update(fm.fwd, . ~ . + Viscera_weight)
 row1 <- data.frame(modelno = 6, variable = "Viscera_weight", sigma = glance(lm(fm.fwd))$sigma)
 glancerows <- rbind(glancerows, row1)
-glancerows
 ```
 
-```{r}
+```{r, echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
 glancerows1 <- data.frame(modelno = glancerows$modelno, sigma = glancerows$sigma)
 rownames(glancerows1) <- glancerows$variable
-glancerows1
+knitr::kable(glancerows1)
 ```
 
 Shell_weight, Shucked_weight, Length, Whole_weight, Height,
 Viscera_weight
 
-### (b) Carry out PCR on the raw data using the same variables and response as in part (a). For each additional principal component you add to the regression model as predictor, calculate the residual standard deviation and list which of the variables has the heighest absolute weight in the respective principal component.
+### (b) Carry out PCR on the raw data using the same variables and response as in part (a). For each additional principal component you add to the regression model as predictor, calculate the residual standard deviation and list which of the variables has the highest absolute weight in the respective principal component.
 
-```{r}
+```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 abalone1 <- dplyr::select(
   abalone,
-  Rings,
+  # Rings,
   Shell_weight,
   Shucked_weight,
   Length,
@@ -203,6 +201,41 @@ abalone1 <- dplyr::select(
   Viscera_weight
 )
 abalone_pr <- prcomp(abalone1, scale = F)
+
+abalone_lm_tmp <- cbind(data.frame(Rings = abalone$Rings), abalone_pr$x)
+glancerows_pc <- data.frame()
+abalone_lm <- lm(Rings ~ 1, abalone_lm_tmp)
+row1_pc <- data.frame(modelno = 0, variable = "(Intercept)", sigma = glance(abalone_lm)$sigma)
+glancerows_pc <- rbind(glancerows_pc, row1_pc)
+
+abalone_lm <- lm(Rings ~ PC1, abalone_lm_tmp)
+row1_pc <- data.frame(modelno = 1, variable = "1 comps", sigma = glance(abalone_lm)$sigma)
+glancerows_pc <- rbind(glancerows_pc, row1_pc)
+
+abalone_lm <- lm(Rings ~ PC1 + PC2, abalone_lm_tmp)
+row1_pc <- data.frame(modelno = 2, variable = "2 comps", sigma = glance(abalone_lm)$sigma)
+glancerows_pc <- rbind(glancerows_pc, row1_pc)
+
+abalone_lm <- lm(Rings ~ PC1 + PC2 + PC3, abalone_lm_tmp)
+row1_pc <- data.frame(modelno = 3, variable = "3 comps", sigma = glance(abalone_lm)$sigma)
+glancerows_pc <- rbind(glancerows_pc, row1_pc)
+
+abalone_lm <- lm(Rings ~ PC1 + PC2 + PC3 + PC4, abalone_lm_tmp)
+row1_pc <- data.frame(modelno = 4, variable = "4 comps", sigma = glance(abalone_lm)$sigma)
+glancerows_pc <- rbind(glancerows_pc, row1_pc)
+
+abalone_lm <- lm(Rings ~ PC1 + PC2 + PC3 + PC4 + PC5, abalone_lm_tmp)
+row1_pc <- data.frame(modelno = 5, variable = "5 comps", sigma = glance(abalone_lm)$sigma)
+glancerows_pc <- rbind(glancerows_pc, row1_pc)
+
+abalone_lm <- lm(Rings ~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6, abalone_lm_tmp)
+row1_pc <- data.frame(modelno = 6, variable = "6 comps", sigma = glance(abalone_lm)$sigma)
+glancerows_pc <- rbind(glancerows_pc, row1_pc)
+```
+
+```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='show'}
+pc1 <- fviz_contrib(abalone_pr, choice = "var", axes = 1) +
+  ggtitle("Contribution of variables to PC1")
 
 pc2 <- fviz_contrib(abalone_pr, choice = "var", axes = 2) +
   ggtitle("Contribution of variables to PC2")
@@ -219,36 +252,27 @@ pc5 <- fviz_contrib(abalone_pr, choice = "var", axes = 5) +
 pc6 <- fviz_contrib(abalone_pr, choice = "var", axes = 6) +
   ggtitle("Contribution of variables to PC6")
 
-pc7 <- fviz_contrib(abalone_pr, choice = "var", axes = 7) +
-  ggtitle("Contribution of variables to PC7")
-
-figure <- ggarrange(pc2, pc3, pc4, pc5, pc6, pc7,
+figure <- ggarrange(pc1, pc2, pc3, pc4, pc5, pc6,
   ncol = 2, nrow = 3
 )
 figure
 ```
 
-```{r}
-set.seed(1000)
-pcr_model <- pcr(Rings ~ ., data = abalone1, scale = F, validation = "CV")
-summary(pcr_model)
-```
-
-```{r}
+```{r, echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
 var_contribution <- c("", "Whole_weight", "Shucked_weight", "Length", "Viscera_weight", "Height", "Viscera_weight")
-pcr_df <- data.frame(var_contribution, RMSEP(pcr_model)$val[1, , ])
-colnames(pcr_df) <- c("variable", "pcr")
-pcr_df
+pcr_df <- data.frame(modelno = glancerows_pc$modelno, variable = var_contribution, sigma = glancerows_pc$sigma)
+rownames(pcr_df) <- glancerows_pc$variable
+knitr::kable(pcr_df)
 ```
 
 ### (c) In a single graph show plots of residual standard deviation resulting from your models on the y -axis against the number of variables/PC components on the x-axis.
 
-```{r}
-rsd_df <- data.frame(modelno = glancerows1$modelno, lm = glancerows1$sigma, pcr = pcr_df$pcr)
+```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
+rsd_df <- data.frame(modelno = glancerows1$modelno, lm = glancerows1$sigma, pcr = pcr_df$sigma)
 rsd_df
 ```
 
-```{r}
+```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='show'}
 rsd_df2 <- tidyr::pivot_longer(rsd_df, -modelno, names_to = "type", values_to = "value")
 ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
   geom_point() +
@@ -256,7 +280,7 @@ ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
   xlab("modelno") +
   ylab("sigma") +
   scale_color_manual(
-    labels = c("pcr", "lm"),
+    labels = c("pcr", "standard lm"),
     values = c("blue", "red")
   ) +
   theme(
@@ -267,7 +291,9 @@ ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
 
 ### (d) Explain why you do not require to a variable selection method when selecting the predictors in PCR.
 
+
 ### (e) Comment on your findings and in particular on what approaches work better for these data and why.
+
 
 # Question 3
 
