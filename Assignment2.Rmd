@@ -61,7 +61,7 @@ measurement, scaling is not necessarily required.
 ```{r}
 ass2pop <- read.csv("ass2pop.csv", header = FALSE)
 S0 <- as.matrix(ass2pop[1:11, 3:13])
-S0
+dim(S0)
 ```
 
 The covariance matrix is a 11x11 square matrix giving the covariance
@@ -72,7 +72,7 @@ between each pair of the first 11 variables from the first population.
 ```{r}
 ev <- eigen(S0)
 vals <- ev$values
-vals
+knitr::kable(round(vals, digits = 4))
 ```
 
 The eigenvalues of the covariance matrix encode the variability of the
@@ -85,7 +85,7 @@ variability as possible.
 V1 <- ev$vectors
 vals2 <- diag(vals^(2 / 3))
 S1 <- V1 %*% vals2 %*% t(V1)
-S1
+knitr::kable(round(S1, digits = 4))
 ```
 
 ### iii. the matrix $2\Sigma^{-1/4}$$\Sigma$$\Sigma^{-1/4}$and its eigenvalues
@@ -94,7 +94,7 @@ S1
 vals3 <- diag(vals^(-1 / 4))
 S2 <- V1 %*% vals3 %*% t(V1)
 mat <- 2 * S2 %*% S0 %*% S2
-mat
+knitr::kable(round(mat, digits = 4))
 vals4 <- eigen(mat)$values
 vals4
 ```
@@ -237,7 +237,6 @@ ggcorr(abalone1, label = T) +
   ggtitle("Heatmap of Predictor Variables")
 ```
 
-
 ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='show'}
 pc1 <- fviz_contrib(abalone_pr, choice = "var", axes = 1) +
   ggtitle("Contribution of variables to PC1")
@@ -295,15 +294,40 @@ ggplot(rsd_df2, aes(x = modelno, y = value, color = type, group = type)) +
 ```
 
 ### (d) Explain why you do not require to a variable selection method when selecting the predictors in PCR.
-PCR does not require us to choose which predictor variables to add to the model since each principal component uses a linear combination of all the predictor variables. Moreover, the principal components are arranged in descending order of variance, so the first principal component always has the largest variance, followed by the second and so on. Hence, a variable selection method is not required as the principal components can just be added to the model in order of their variances.
+
+PCR does not require us to choose which predictor variables to add to
+the model since each principal component uses a linear combination of
+all the predictor variables. Moreover, the principal components are
+arranged in descending order of variance, so the first principal
+component always has the largest variance, followed by the second and so
+on. Hence, a variable selection method is not required as the principal
+components can just be added to the model in order of their variances.
 
 ### (e) Comment on your findings and in particular on what approaches work better for these data and why.
-Based on the correlation heatmap of the predictor variables, we can see that they are highly collinear. The lines plot above shows that the standard linear regression has a smaller residual standard deviation than the principal component regression when the models with only one variable, but for models with two to four variables, the principal component regression has smaller residual standard deviations than the standard linear regression. As for models with five or more variables, the differences in the residual standard deviations between the two regressions are either small or zero. 
 
-For the standard linear regression, the predictor variables are added to the model using forward stepwise regression with the largest F-value. Stepwise regression might not be suitable as the F-statistics do not have the claimed distribution, and collinearity problems are exacerbated. For the principal component regression, the predictor variables are added to the model based on the variances of the principal components. PCR can perform well even when the predictor variables are highly collinear, as it produces principal components that are orthogonal to each other. 
+Based on the correlation heatmap of the predictor variables, we can see
+that they are highly collinear. The lines plot above shows that the
+standard linear regression has a smaller residual standard deviation
+than the principal component regression when the models with only one
+variable, but for models with two to four variables, the principal
+component regression has smaller residual standard deviations than the
+standard linear regression. As for models with five or more variables,
+the differences in the residual standard deviations between the two
+regressions are either small or zero.
 
-In conclusion, for this data set, standard linear regression should be used for one variable, and principal component regression should be used for two or more variables.
+For the standard linear regression, the predictor variables are added to
+the model using forward stepwise regression with the largest F-value.
+Stepwise regression might not be suitable as the F-statistics do not
+have the claimed distribution, and collinearity problems are
+exacerbated. For the principal component regression, the predictor
+variables are added to the model based on the variances of the principal
+components. PCR can perform well even when the predictor variables are
+highly collinear, as it produces principal components that are
+orthogonal to each other.
 
+In conclusion, for this data set, standard linear regression should be
+used for one variable, and principal component regression should be used
+for two or more variables.
 
 # Question 3
 
@@ -323,10 +347,10 @@ cultivar
 
 ```{r, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 cultivar_scaled <- scale(cultivar, center = TRUE)
-cultivar_scaled
 
 cultivar12_scaled <- scale(cultivar12, center = TRUE)
-cultivar12_scaled
+
+dim(cultivar12_scaled)
 ```
 
 There are 130 observations in the cultivar12 data.
@@ -338,11 +362,9 @@ There are 130 observations in the cultivar12 data.
 ```{r}
 S1 <- cov(cultivar_scaled)
 val1 <- eigen(S1)$values
-val1
 
 S2 <- cov(cultivar12_scaled)
 val2 <- eigen(S2)$values
-val2
 
 sigma_hat_sq1 <- (1 / (13 - 2)) * (sum(val1[3:13]))
 sigma_hat_sq2 <- (1 / (13 - 2)) * (sum(val2[3:13]))
@@ -406,14 +428,14 @@ variables are grouped differently and have different angles.
 ### i. Calculate the factor loadings for the 2-factor ML without rotation. List your factor loadings and show biplots of the factor loadings.
 
 ```{r}
-fa1 <- factanal(cultivar_scaled, factors = 2, rotation = "none")$loadings
-fa2 <- factanal(cultivar12_scaled, factors = 2, rotation = "none")$loadings
+fa1 <- factanal(cultivar_scaled, factors = 2, rotation = "none")
+fa2 <- factanal(cultivar12_scaled, factors = 2, rotation = "none")
 
-fa1
-fa2
+fa1$loadings
+fa2$loadings
 
-biplot(wine_pr1$x, fa1, col = c("white", "blue"))
-biplot(wine_pr1$x, fa2, col = c("white", "blue"))
+biplot(wine_pr1$x, fa1$loadings, col = c("white", "blue"))
+biplot(wine_pr2$x, fa2$loadings, col = c("white", "blue"))
 ```
 
 ### ii. Carry out a sequence of hypothesis tests starting with the one-factor model.
@@ -422,7 +444,81 @@ biplot(wine_pr1$x, fa2, col = c("white", "blue"))
 
 #### B. For each $k \le k_{max}$ , state the number of degrees of freedom of the $\chi^2$ distribution, the limiting distribution of the test statistic $-2log LR_k$ , and report the p-value for each set of tests.
 
+Complete data
+
+```{r}
+cultivar_df = data.frame()
+
+cultivar_fa1 = factanal( cultivar_scaled, 1, rotation = "none", scores = "regression" )
+wine_row <- data.frame(k = 1, dof = cultivar_fa1$dof, p_value = cultivar_fa1$PVAL)
+cultivar_df <- rbind(cultivar_df, wine_row)
+
+cultivar_fa2 = factanal( cultivar_scaled, 2, rotation = "none", scores = "regression" )
+wine_row <- data.frame(k = 2, dof = cultivar_fa2$dof, p_value = cultivar_fa2$PVAL)
+cultivar_df <- rbind(cultivar_df, wine_row)
+
+cultivar_fa3 = factanal( cultivar_scaled, 3, rotation = "none", scores = "regression" )
+wine_row <- data.frame(k = 3, dof = cultivar_fa3$dof, p_value = cultivar_fa3$PVAL)
+cultivar_df <- rbind(cultivar_df, wine_row)
+
+cultivar_fa4 = factanal( cultivar_scaled, 4, rotation = "none", scores = "regression" )
+wine_row <- data.frame(k = 4, dof = cultivar_fa4$dof, p_value = cultivar_fa4$PVAL)
+cultivar_df <- rbind(cultivar_df, wine_row)
+
+cultivar_fa5 = factanal( cultivar_scaled, 5, rotation = "none", scores = "regression" )
+wine_row <- data.frame(k = 5, dof = cultivar_fa5$dof, p_value = cultivar_fa5$PVAL)
+cultivar_df <- rbind(cultivar_df, wine_row)
+
+cultivar_fa6 = factanal( cultivar_scaled, 6, rotation = "none", scores = "regression" )
+wine_row <- data.frame(k = 6, dof = cultivar_fa6$dof, p_value = cultivar_fa6$PVAL)
+cultivar_df <- rbind(cultivar_df, wine_row)
+
+rownames(cultivar_df) <- NULL
+knitr::kable(cultivar_df)
+```
+
+cultivar12 data
+
+```{r}
+cultivar12_df <- data.frame()
+
+cultivar12_fa1 = factanal( cultivar12_scaled, 1, rotation = "none", scores = "regression" )
+cultivar12_row <- data.frame(k = 1, dof = cultivar12_fa1$dof, p_value = cultivar12_fa1$PVAL)
+cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
+
+cultivar12_fa2 = factanal( cultivar12_scaled, 2, rotation = "none", scores = "regression" )
+cultivar12_row <- data.frame(k = 2, dof = cultivar12_fa2$dof, p_value = cultivar12_fa2$PVAL)
+cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
+
+cultivar12_fa3 = factanal( cultivar12_scaled, 3, rotation = "none", scores = "regression" )
+cultivar12_row <- data.frame(k = 3, dof = cultivar12_fa3$dof, p_value = cultivar12_fa3$PVAL)
+cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
+
+cultivar12_fa4 = factanal( cultivar12_scaled, 4, rotation = "none", scores = "regression" )
+cultivar12_row <- data.frame(k = 4, dof = cultivar12_fa4$dof, p_value = cultivar12_fa4$PVAL)
+cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
+
+cultivar12_fa5 = factanal( cultivar12_scaled, 5, rotation = "none", scores = "regression" )
+cultivar12_row <- data.frame(k = 5, dof = cultivar12_fa5$dof, p_value = cultivar12_fa5$PVAL)
+cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
+
+cultivar12_fa6 = factanal( cultivar12_scaled, 6, rotation = "none", scores = "regression" )
+cultivar12_row <- data.frame(k = 6, dof = cultivar12_fa6$dof, p_value = cultivar12_fa6$PVAL)
+cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
+
+rownames(cultivar12_df) <- NULL
+knitr::kable(cultivar12_df)
+```
+
 #### C. What is the appropriate k-factor model for the complete and cultivar12 data?
+
+At k = 5, the hypothesis tests of the complete data and cultivar12 are
+smaller than
+0.05, which is the significance value, so the suitable model for both
+data sets
+is a 6-factor model. A 5-factor model is ideal if the significant level
+is at
+0.01.
 
 ### iii. Compare the results of parts (b) and (c).
 
@@ -443,7 +539,7 @@ Boston
     correlations and show the four CC score plots corresponding to
     (U•^~j~^, V•~j~ ) for j = 1, . . . , 4.
 
-```{r}
+```{r, out.width="50%"}
 Boston.rearranged <- Boston %>% dplyr::select(
   "crim",
   "indus",
@@ -488,7 +584,7 @@ The fourth CC score plot shows very little correlation.s
     (a). Repeat the calculations and graphics of part (a) for these
     data.
 
-```{r}
+```{r, out.width="50%"}
 Boston.rearranged <- Boston %>% dplyr::select(
   "crim",
   "indus",
