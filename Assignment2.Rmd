@@ -14,8 +14,8 @@ editor_options:
 ---
 
 ```{r, include=FALSE}
-# setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/STAT3064/Data Sets")
-setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
+setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/STAT3064/Data Sets")
+# setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
 
 rm(list = ls())
 
@@ -31,7 +31,7 @@ if (!is.null(sessionInfo()$otherPkgs)) {
 options(stringsAsFactors = FALSE)
 ```
 
-```{r, include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
+```{r,include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 library(reshape2)
 library(tidyverse)
 library(MASS)
@@ -333,7 +333,7 @@ for two or more variables.
 
 ## We consider the 13-dimensional wine recognition data of Example 4.6 and Lab 4. The data are available in the Data Sets folder. Here we want to compare a factor analysis of all observations with those obtained from cultivar 1 and cultivar 2. The cultivar membership of the observations is given in column 1 of the data set. For part of this analysis you may report the relevant results obtained in the lab. You may find it useful to create two data frames: one for the complete data and a separate one for the first two cultivars of the data. We refer to the latter as the *cultivar12* data. Hint. use the R command factanal from the stats library.
 
-```{r, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
+```{r,include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 cultivar <- read.table(file = "wine.tsv", sep = ",")
 
 cultivar12 <- cultivar[cultivar$V1 != 3, 2:14]
@@ -347,7 +347,7 @@ cultivar
 
 ## (a) Scale the data and work with the scaled data. How many observations are in the cultivar12 data?
 
-```{r, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
+```{r,include=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='hide'}
 cultivar_scaled <- scale(cultivar, center = TRUE)
 
 cultivar12_scaled <- scale(cultivar12, center = TRUE)
@@ -361,7 +361,7 @@ There are 130 observations in the cultivar12 data.
 
 ### i. Calculate the sample covariance matrix of the scaled data and the eigenvalues of this matrix. What is the value of $\hat{\sigma}^2$ for k=2? How different are the values of $\hat{\sigma}^2$ for the complete and the two cultivar12 datasets? Hint. You may use the information Box 6.7 in your calculations.
 
-```{r}
+```{r,echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
 S1 <- cov(cultivar_scaled)
 val1 <- eigen(S1)$values
 
@@ -376,11 +376,11 @@ sigma_hat_sq2
 ```
 
 The value of $\hat{\sigma}^2$ for the complete dataset is 0.057897 lower
-that the one for cultivar12 dataset.
+than the one for cultivar12 dataset.
 
 ### ii. Calculate and list the factor loadings for the 2-factor principal axis factoring using the value of $\hat{\sigma}^2$ calculated in the previous part.
 
-```{r}
+```{r,echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
 # Factor loading for complete cultivar dataset
 Om1 <- diag(rep(sigma_hat_sq1, 13))
 S_A1 <- S1 - Om1
@@ -406,7 +406,7 @@ Ahat2
 
 ### iii. Show biplots of the factor loadings.
 
-```{r}
+```{r,echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='show'}
 wine_pr1 <- prcomp(cultivar_scaled, scale = F)
 wine_pr2 <- prcomp(cultivar12_scaled, scale = F)
 
@@ -430,7 +430,7 @@ variables are grouped differently and have different angles.
 
 ### i. Calculate the factor loadings for the 2-factor ML without rotation. List your factor loadings and show biplots of the factor loadings.
 
-```{r}
+```{r,echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.show='show'}
 fa1 <- factanal(cultivar_scaled, factors = 2, rotation = "none")
 fa2 <- factanal(cultivar12_scaled, factors = 2, rotation = "none")
 
@@ -563,9 +563,9 @@ if the significant level is at 0.01.
     in (b) and (c).
 
 -   Biplots of all data in (b) and (c) have the similar variables
-    grouped together within small angles e.g.
-    (v1, v3, v5, v10, v13) in a group, (v6, v7, v9,v11, v12) in a group
-    and (v2, v4 ,v8) in another group.
+    grouped together within small angles e.g. (v1, v3, v5, v10, v13) in
+    a group, (v6, v7, v9,v11, v12) in a group and (v2, v4 ,v8) in
+    another group.
 
 -   The variables seems to be grouped together similarly between the
     biplots of all data and cultivar12 in (c) whereas the variables
@@ -595,7 +595,7 @@ Boston
     correlations and show the four CC score plots corresponding to
     (U•^~j~^, V•~j~ ) for j = 1, . . . , 4.
 
-```{r, out.width="50%"}
+```{r, echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='show', out.width="50%"}
 Boston.rearranged <- Boston %>% dplyr::select(
   "crim",
   "indus",
@@ -640,7 +640,7 @@ The fourth CC score plot shows very little correlation.s
     (a). Repeat the calculations and graphics of part (a) for these
     data.
 
-```{r, out.width="50%"}
+```{r, echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='show', out.width="50%"}
 Boston.rearranged <- Boston %>% dplyr::select(
   "crim",
   "indus",
@@ -661,7 +661,7 @@ individual <- Boston.rearranged[, 8:13]
 
 boston.CC <- cancor(envsocial, individual)
 
-print("The strength of the four correlations: ")
+print("The strength of the six correlations: ")
 print(boston.CC$cor)
 
 for (i in 1:6) {
@@ -688,7 +688,7 @@ the rank of the data matrix has increased to 6.
     strengths obtained in part (c). Calculate the p-values for each
     statistic and report these p-values.
 
-```{r}
+```{r, echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
 Tk <- function(n, d1, d2, cor, k) {
   constant <- n - 0.5 * (d1 + d2 + 3)
   terms <- na.omit(1 - cor[k + 1:length(cor)]^2)
