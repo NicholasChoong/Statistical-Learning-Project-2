@@ -447,29 +447,29 @@ biplot(wine_pr2$x, fa2$loadings, col = c("white", "blue"))
 Complete data
 
 ```{r, echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
-cultivar_df = data.frame()
+cultivar_df <- data.frame()
 
-cultivar_fa1 = factanal( cultivar_scaled, 1, rotation = "none", scores = "regression" )
+cultivar_fa1 <- factanal(cultivar_scaled, 1, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 1, dof = cultivar_fa1$dof, p_value = cultivar_fa1$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
-cultivar_fa2 = factanal( cultivar_scaled, 2, rotation = "none", scores = "regression" )
+cultivar_fa2 <- factanal(cultivar_scaled, 2, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 2, dof = cultivar_fa2$dof, p_value = cultivar_fa2$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
-cultivar_fa3 = factanal( cultivar_scaled, 3, rotation = "none", scores = "regression" )
+cultivar_fa3 <- factanal(cultivar_scaled, 3, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 3, dof = cultivar_fa3$dof, p_value = cultivar_fa3$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
-cultivar_fa4 = factanal( cultivar_scaled, 4, rotation = "none", scores = "regression" )
+cultivar_fa4 <- factanal(cultivar_scaled, 4, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 4, dof = cultivar_fa4$dof, p_value = cultivar_fa4$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
-cultivar_fa5 = factanal( cultivar_scaled, 5, rotation = "none", scores = "regression" )
+cultivar_fa5 <- factanal(cultivar_scaled, 5, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 5, dof = cultivar_fa5$dof, p_value = cultivar_fa5$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
-cultivar_fa6 = factanal( cultivar_scaled, 6, rotation = "none", scores = "regression" )
+cultivar_fa6 <- factanal(cultivar_scaled, 6, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 6, dof = cultivar_fa6$dof, p_value = cultivar_fa6$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
@@ -482,27 +482,27 @@ Cultivar12 data
 ```{r, echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
 cultivar12_df <- data.frame()
 
-cultivar12_fa1 = factanal( cultivar12_scaled, 1, rotation = "none", scores = "regression" )
+cultivar12_fa1 <- factanal(cultivar12_scaled, 1, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 1, dof = cultivar12_fa1$dof, p_value = cultivar12_fa1$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
-cultivar12_fa2 = factanal( cultivar12_scaled, 2, rotation = "none", scores = "regression" )
+cultivar12_fa2 <- factanal(cultivar12_scaled, 2, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 2, dof = cultivar12_fa2$dof, p_value = cultivar12_fa2$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
-cultivar12_fa3 = factanal( cultivar12_scaled, 3, rotation = "none", scores = "regression" )
+cultivar12_fa3 <- factanal(cultivar12_scaled, 3, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 3, dof = cultivar12_fa3$dof, p_value = cultivar12_fa3$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
-cultivar12_fa4 = factanal( cultivar12_scaled, 4, rotation = "none", scores = "regression" )
+cultivar12_fa4 <- factanal(cultivar12_scaled, 4, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 4, dof = cultivar12_fa4$dof, p_value = cultivar12_fa4$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
-cultivar12_fa5 = factanal( cultivar12_scaled, 5, rotation = "none", scores = "regression" )
+cultivar12_fa5 <- factanal(cultivar12_scaled, 5, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 5, dof = cultivar12_fa5$dof, p_value = cultivar12_fa5$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
-cultivar12_fa6 = factanal( cultivar12_scaled, 6, rotation = "none", scores = "regression" )
+cultivar12_fa6 <- factanal(cultivar12_scaled, 6, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 6, dof = cultivar12_fa6$dof, p_value = cultivar12_fa6$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
