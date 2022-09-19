@@ -72,7 +72,7 @@ between each pair of the first 11 variables from the first population.
 ```{r}
 ev <- eigen(S0)
 vals <- ev$values
-knitr::kable(round(vals, digits = 4))
+vals
 ```
 
 The eigenvalues of the covariance matrix encode the variability of the
@@ -85,7 +85,7 @@ variability as possible.
 V1 <- ev$vectors
 vals2 <- diag(vals^(2 / 3))
 S1 <- V1 %*% vals2 %*% t(V1)
-knitr::kable(round(S1, digits = 4))
+S1
 ```
 
 ### iii. the matrix $2\Sigma^{-1/4}$$\Sigma$$\Sigma^{-1/4}$and its eigenvalues
@@ -94,7 +94,7 @@ knitr::kable(round(S1, digits = 4))
 vals3 <- diag(vals^(-1 / 4))
 S2 <- V1 %*% vals3 %*% t(V1)
 mat <- 2 * S2 %*% S0 %*% S2
-knitr::kable(round(mat, digits = 4))
+mat
 vals4 <- eigen(mat)$values
 vals4
 ```
@@ -441,6 +441,12 @@ biplot(wine_pr2$x, fa2$loadings, col = c("white", "blue"))
 ### ii. Carry out a sequence of hypothesis tests starting with the one-factor model.
 
 #### A. What is the largest number $\hat{\sigma}^2$ of factors you can test with these data? Why can we not exceed this number?
+
+The largest number $\hat{\sigma}^2$ of factors we can test is the total
+number of variables minus one as the $\hat{\sigma}^2$ is calculated by
+dividing the difference between the maximum number of variables and the
+k. If the k is equal to the maximum number of variables, then we would
+be dividing by zero.
 
 #### B. For each $k \le k_{max}$ , state the number of degrees of freedom of the $\chi^2$ distribution, the limiting distribution of the test statistic $-2log LR_k$, and report the p-value for each set of tests.
 
