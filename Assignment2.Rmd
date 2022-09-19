@@ -15,7 +15,7 @@ editor_options:
 
 ```{r, include=FALSE}
 # setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/STAT3064/Data Sets")
-# setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
+setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
 
 rm(list = ls())
 
@@ -337,9 +337,11 @@ for two or more variables.
 cultivar <- read.table(file = "wine.tsv", sep = ",")
 
 cultivar12 <- cultivar[cultivar$V1 != 3, 2:14]
+colnames(cultivar12) = paste0("V",seq(1:13))
 cultivar12
 
 cultivar <- cultivar[, 2:14]
+colnames(cultivar) = paste0("V",seq(1:13))
 cultivar
 ```
 
@@ -373,7 +375,7 @@ sigma_hat_sq1
 sigma_hat_sq2
 ```
 
-The value of $\hat{\sigma}^2$ for the complete dataset is 0.57897 lower
+The value of $\hat{\sigma}^2$ for the complete dataset is 0.057897 lower
 that the one for cultivar12 dataset.
 
 ### ii. Calculate and list the factor loadings for the 2-factor principal axis factoring using the value of $\hat{\sigma}^2$ calculated in the previous part.
@@ -410,6 +412,7 @@ wine_pr2 <- prcomp(cultivar12_scaled, scale = F)
 
 biplot(wine_pr1$x, Ahat1, col = c("white", "blue"))
 biplot(wine_pr2$x, Ahat2, col = c("white", "blue"))
+
 ```
 
 ### iv. Compare the results obtained from the complete data and the cultivar12 data and comment on the main differences, similarities etc.
@@ -442,6 +445,24 @@ biplot(wine_pr2$x, fa2$loadings, col = c("white", "blue"))
 
 #### A. What is the largest number $\hat{\sigma}^2$ of factors you can test with these data? Why can we not exceed this number?
 
+```{r}
+kmax = 1
+for (k in 1:13){
+  if ((13-k)^2 - (13+k) <= 0){
+    break
+  }
+  kmax = k
+}
+print(kmax)
+```
+
+The largest number $\hat{\sigma}^2$ of factors I can test with these
+data is 8. $k$ is used to approximate the degree of freedom $v$ for
+chisquare distribution. Since $v = (d-k)^2 - (d+k)$ and $v$ must be
+positive because it is not possible to use negative $v$ for chisquare
+distribution, $k$ is restricted to a maximum value, which in this case
+is 8 to ensure $v$ is positive.
+
 #### B. For each $k \le k_{max}$ , state the number of degrees of freedom of the $\chi^2$ distribution, the limiting distribution of the test statistic $-2log LR_k$ , and report the p-value for each set of tests.
 
 Complete data
@@ -471,6 +492,14 @@ cultivar_df <- rbind(cultivar_df, wine_row)
 
 cultivar_fa6 = factanal( cultivar_scaled, 6, rotation = "none", scores = "regression" )
 wine_row <- data.frame(k = 6, dof = cultivar_fa6$dof, p_value = cultivar_fa6$PVAL)
+cultivar_df <- rbind(cultivar_df, wine_row)
+
+cultivar_fa7 = factanal( cultivar_scaled, 7, rotation = "none", scores = "regression" )
+wine_row <- data.frame(k = 7, dof = cultivar_fa7$dof, p_value = cultivar_fa7$PVAL)
+cultivar_df <- rbind(cultivar_df, wine_row)
+
+cultivar_fa8 = factanal( cultivar_scaled, 8, rotation = "none", scores = "regression" )
+wine_row <- data.frame(k = 8, dof = cultivar_fa8$dof, p_value = cultivar_fa8$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
 rownames(cultivar_df) <- NULL
@@ -506,6 +535,14 @@ cultivar12_fa6 = factanal( cultivar12_scaled, 6, rotation = "none", scores = "re
 cultivar12_row <- data.frame(k = 6, dof = cultivar12_fa6$dof, p_value = cultivar12_fa6$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
+cultivar12_fa7 = factanal( cultivar12_scaled, 7, rotation = "none", scores = "regression" )
+cultivar12_row <- data.frame(k = 7, dof = cultivar12_fa7$dof, p_value = cultivar12_fa7$PVAL)
+cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
+
+cultivar12_fa8 = factanal( cultivar12_scaled, 8, rotation = "none", scores = "regression" )
+cultivar12_row <- data.frame(k = 8, dof = cultivar12_fa8$dof, p_value = cultivar12_fa8$PVAL)
+cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
+
 rownames(cultivar12_df) <- NULL
 knitr::kable(cultivar12_df)
 ```
@@ -513,14 +550,33 @@ knitr::kable(cultivar12_df)
 #### C. What is the appropriate k-factor model for the complete and cultivar12 data?
 
 At k = 5, the hypothesis tests of the complete data and cultivar12 are
-smaller than
-0.05, which is the significance value, so the suitable model for both
-data sets
-is a 6-factor model. A 5-factor model is ideal if the significant level
-is at
-0.01.
+smaller than 0.05, which is the significance value, so the suitable
+model for both data sets is a 6-factor model. A 5-factor model is ideal
+if the significant level is at 0.01.
 
 ### iii. Compare the results of parts (b) and (c).
+
+-   If we invert the sign of factor loadings of all data in (b), the
+    first factor loadings of all data in (b) agree in sign and order of
+    the largest entries well with those of (c). Similarly good agreement
+    also exists between the first factor loadings of the cultivar12 data
+    in (b) and (c).
+
+-   Biplots of all data in (b) and (c) have the similar variables
+    grouped together within small angles e.g.
+    (v1, v3, v5, v10, v13) in a group, (v6, v7, v9,v11, v12) in a group
+    and (v2, v4 ,v8) in another group.
+
+-   The variables seems to be grouped together similarly between the
+    biplots of all data and cultivar12 in (c) whereas the variables
+    doesn't seems to be grouped together similarly between the biplots
+    of all data and cultivar12 in (b).
+
+-   The biplots of the two ML based loadings in (c) look less similar
+    than the biplots of the PC-based loadings of part (b).
+
+-   The biplot of cultivar12 in (b) is very unique from all other
+    biplots.
 
 # Question 4
 
