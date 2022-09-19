@@ -72,7 +72,7 @@ between each pair of the first 11 variables from the first population.
 ```{r}
 ev <- eigen(S0)
 vals <- ev$values
-knitr::kable(round(vals, digits = 4))
+vals
 ```
 
 The eigenvalues of the covariance matrix encode the variability of the
@@ -85,7 +85,7 @@ variability as possible.
 V1 <- ev$vectors
 vals2 <- diag(vals^(2 / 3))
 S1 <- V1 %*% vals2 %*% t(V1)
-knitr::kable(round(S1, digits = 4))
+S1
 ```
 
 ### iii. the matrix $2\Sigma^{-1/4}$$\Sigma$$\Sigma^{-1/4}$and its eigenvalues
@@ -94,7 +94,7 @@ knitr::kable(round(S1, digits = 4))
 vals3 <- diag(vals^(-1 / 4))
 S2 <- V1 %*% vals3 %*% t(V1)
 mat <- 2 * S2 %*% S0 %*% S2
-knitr::kable(round(mat, digits = 4))
+mat
 vals4 <- eigen(mat)$values
 vals4
 ```
@@ -467,30 +467,30 @@ is 8 to ensure $v$ is positive.
 
 Complete data
 
-```{r}
-cultivar_df = data.frame()
+```{r, echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
+cultivar_df <- data.frame()
 
-cultivar_fa1 = factanal( cultivar_scaled, 1, rotation = "none", scores = "regression" )
+cultivar_fa1 <- factanal(cultivar_scaled, 1, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 1, dof = cultivar_fa1$dof, p_value = cultivar_fa1$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
-cultivar_fa2 = factanal( cultivar_scaled, 2, rotation = "none", scores = "regression" )
+cultivar_fa2 <- factanal(cultivar_scaled, 2, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 2, dof = cultivar_fa2$dof, p_value = cultivar_fa2$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
-cultivar_fa3 = factanal( cultivar_scaled, 3, rotation = "none", scores = "regression" )
+cultivar_fa3 <- factanal(cultivar_scaled, 3, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 3, dof = cultivar_fa3$dof, p_value = cultivar_fa3$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
-cultivar_fa4 = factanal( cultivar_scaled, 4, rotation = "none", scores = "regression" )
+cultivar_fa4 <- factanal(cultivar_scaled, 4, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 4, dof = cultivar_fa4$dof, p_value = cultivar_fa4$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
-cultivar_fa5 = factanal( cultivar_scaled, 5, rotation = "none", scores = "regression" )
+cultivar_fa5 <- factanal(cultivar_scaled, 5, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 5, dof = cultivar_fa5$dof, p_value = cultivar_fa5$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
-cultivar_fa6 = factanal( cultivar_scaled, 6, rotation = "none", scores = "regression" )
+cultivar_fa6 <- factanal(cultivar_scaled, 6, rotation = "none", scores = "regression")
 wine_row <- data.frame(k = 6, dof = cultivar_fa6$dof, p_value = cultivar_fa6$PVAL)
 cultivar_df <- rbind(cultivar_df, wine_row)
 
@@ -503,35 +503,35 @@ wine_row <- data.frame(k = 8, dof = cultivar_fa8$dof, p_value = cultivar_fa8$PVA
 cultivar_df <- rbind(cultivar_df, wine_row)
 
 rownames(cultivar_df) <- NULL
-knitr::kable(cultivar_df)
+cultivar_df
 ```
 
-cultivar12 data
+Cultivar12 data
 
-```{r}
+```{r, echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
 cultivar12_df <- data.frame()
 
-cultivar12_fa1 = factanal( cultivar12_scaled, 1, rotation = "none", scores = "regression" )
+cultivar12_fa1 <- factanal(cultivar12_scaled, 1, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 1, dof = cultivar12_fa1$dof, p_value = cultivar12_fa1$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
-cultivar12_fa2 = factanal( cultivar12_scaled, 2, rotation = "none", scores = "regression" )
+cultivar12_fa2 <- factanal(cultivar12_scaled, 2, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 2, dof = cultivar12_fa2$dof, p_value = cultivar12_fa2$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
-cultivar12_fa3 = factanal( cultivar12_scaled, 3, rotation = "none", scores = "regression" )
+cultivar12_fa3 <- factanal(cultivar12_scaled, 3, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 3, dof = cultivar12_fa3$dof, p_value = cultivar12_fa3$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
-cultivar12_fa4 = factanal( cultivar12_scaled, 4, rotation = "none", scores = "regression" )
+cultivar12_fa4 <- factanal(cultivar12_scaled, 4, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 4, dof = cultivar12_fa4$dof, p_value = cultivar12_fa4$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
-cultivar12_fa5 = factanal( cultivar12_scaled, 5, rotation = "none", scores = "regression" )
+cultivar12_fa5 <- factanal(cultivar12_scaled, 5, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 5, dof = cultivar12_fa5$dof, p_value = cultivar12_fa5$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
-cultivar12_fa6 = factanal( cultivar12_scaled, 6, rotation = "none", scores = "regression" )
+cultivar12_fa6 <- factanal(cultivar12_scaled, 6, rotation = "none", scores = "regression")
 cultivar12_row <- data.frame(k = 6, dof = cultivar12_fa6$dof, p_value = cultivar12_fa6$PVAL)
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
@@ -544,7 +544,7 @@ cultivar12_row <- data.frame(k = 8, dof = cultivar12_fa8$dof, p_value = cultivar
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
 rownames(cultivar12_df) <- NULL
-knitr::kable(cultivar12_df)
+cultivar12_df
 ```
 
 #### C. What is the appropriate k-factor model for the complete and cultivar12 data?
