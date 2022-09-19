@@ -442,11 +442,11 @@ biplot(wine_pr2$x, fa2$loadings, col = c("white", "blue"))
 
 #### A. What is the largest number $\hat{\sigma}^2$ of factors you can test with these data? Why can we not exceed this number?
 
-#### B. For each $k \le k_{max}$ , state the number of degrees of freedom of the $\chi^2$ distribution, the limiting distribution of the test statistic $-2log LR_k$ , and report the p-value for each set of tests.
+#### B. For each $k \le k_{max}$ , state the number of degrees of freedom of the $\chi^2$ distribution, the limiting distribution of the test statistic $-2log LR_k$, and report the p-value for each set of tests.
 
 Complete data
 
-```{r}
+```{r, echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
 cultivar_df = data.frame()
 
 cultivar_fa1 = factanal( cultivar_scaled, 1, rotation = "none", scores = "regression" )
@@ -474,12 +474,12 @@ wine_row <- data.frame(k = 6, dof = cultivar_fa6$dof, p_value = cultivar_fa6$PVA
 cultivar_df <- rbind(cultivar_df, wine_row)
 
 rownames(cultivar_df) <- NULL
-knitr::kable(cultivar_df)
+cultivar_df
 ```
 
-cultivar12 data
+Cultivar12 data
 
-```{r}
+```{r, echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
 cultivar12_df <- data.frame()
 
 cultivar12_fa1 = factanal( cultivar12_scaled, 1, rotation = "none", scores = "regression" )
@@ -507,18 +507,15 @@ cultivar12_row <- data.frame(k = 6, dof = cultivar12_fa6$dof, p_value = cultivar
 cultivar12_df <- rbind(cultivar12_df, cultivar12_row)
 
 rownames(cultivar12_df) <- NULL
-knitr::kable(cultivar12_df)
+cultivar12_df
 ```
 
 #### C. What is the appropriate k-factor model for the complete and cultivar12 data?
 
 At k = 5, the hypothesis tests of the complete data and cultivar12 are
-smaller than
-0.05, which is the significance value, so the suitable model for both
-data sets
-is a 6-factor model. A 5-factor model is ideal if the significant level
-is at
-0.01.
+smaller than 0.05, which is the significance value, so the suitable
+model for both data sets is a 6-factor model. A 5-factor model is ideal
+if the significant level is at 0.01.
 
 ### iii. Compare the results of parts (b) and (c).
 
