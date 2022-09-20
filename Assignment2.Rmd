@@ -14,8 +14,8 @@ editor_options:
 ---
 
 ```{r, include=FALSE}
-setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/STAT3064/Data Sets")
-# setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
+#setwd("~/Library/CloudStorage/OneDrive-TheUniversityofWesternAustralia/STAT3064/Data Sets")
+ setwd("C:/Users/user/OneDrive - The University of Western Australia/Units/STAT3064/Labs/STAT3064-Ass2")
 
 rm(list = ls())
 
@@ -364,14 +364,24 @@ There are 130 observations in the cultivar12 data.
 ```{r,echo=FALSE, results='show', message=FALSE, warning=FALSE, fig.show='hide'}
 S1 <- cov(cultivar_scaled)
 val1 <- eigen(S1)$values
+print("Sample Covariance Matrix (complete data)")
+S1
+print("Eigenvalues (complete data)")
+val1
 
 S2 <- cov(cultivar12_scaled)
 val2 <- eigen(S2)$values
+print("Sample Covariance Matrix (cultivar12 data)")
+S2
+print("Eigenvalues (cultivar12 data)")
+val2
 
 sigma_hat_sq1 <- (1 / (13 - 2)) * (sum(val1[3:13]))
 sigma_hat_sq2 <- (1 / (13 - 2)) * (sum(val2[3:13]))
 
+print("Sample Sigma Squared (complete data)")
 sigma_hat_sq1
+print("Sample Sigma Squared (cultivar12 data)")
 sigma_hat_sq2
 ```
 
@@ -410,8 +420,8 @@ Ahat2
 wine_pr1 <- prcomp(cultivar_scaled, scale = F)
 wine_pr2 <- prcomp(cultivar12_scaled, scale = F)
 
-biplot(wine_pr1$x, Ahat1, col = c("white", "blue"))
-biplot(wine_pr2$x, Ahat2, col = c("white", "blue"))
+biplot(wine_pr1$x, Ahat1, col = c("white", "blue"),xlab="Factor Loading 1",ylab="Factor Loading 2")
+biplot(wine_pr2$x, Ahat2, col = c("white", "blue"),xlab="Factor Loading 1",ylab="Factor Loading 2")
 
 ```
 
@@ -437,8 +447,8 @@ fa2 <- factanal(cultivar12_scaled, factors = 2, rotation = "none")
 fa1$loadings
 fa2$loadings
 
-biplot(wine_pr1$x, fa1$loadings, col = c("white", "blue"))
-biplot(wine_pr2$x, fa2$loadings, col = c("white", "blue"))
+biplot(wine_pr1$x, fa1$loadings, col = c("white", "blue"),xlab="Factor Loading 1",ylab="Factor Loading 2")
+biplot(wine_pr2$x, fa2$loadings, col = c("white", "blue"),xlab="Factor Loading 1",ylab="Factor Loading 2")
 ```
 
 ### ii. Carry out a sequence of hypothesis tests starting with the one-factor model.
